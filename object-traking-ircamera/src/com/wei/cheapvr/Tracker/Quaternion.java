@@ -3,7 +3,7 @@ package com.wei.cheapvr.Tracker;
 import com.wei.cheapvr.Tracker.Quaternion;
 
 
-public class Quaternion {
+public class Quaternion implements Number<Quaternion> {
     public double w, x, y, z;
     
     public Quaternion(double w, double x, double y, double z) {
@@ -51,6 +51,12 @@ public class Quaternion {
     public Quaternion minus(Quaternion q) {
         return minus(q.w, q.x, q.y, q.z);
     }
+    public double distTo(Quaternion other) {
+        return sqrt(pow(abs(w - other.w), 2) + 
+                        pow(abs(x - other.x), 2) + 
+                        pow(abs(y - other.y), 2) + 
+                        pow(abs(z - other.z), 2));
+    }
     public Quaternion qProduct(Quaternion q) {
         double w1 = this.w, w2 = q.w;
         Vector3 v1 = this.toVector(), v2 = q.toVector();
@@ -90,4 +96,8 @@ public class Quaternion {
     public String toString() {
         return "[" + w + "," + x + "," + y + "," + z + "]";
     }
+    
+    private static double sqrt(double x) { return Math.sqrt(x); }
+    private static double abs(double x) { return Math.abs(x); }
+    private static double pow(double a, double b) { return Math.pow(a, b); }
 }

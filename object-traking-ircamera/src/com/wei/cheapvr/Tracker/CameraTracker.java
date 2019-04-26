@@ -52,21 +52,21 @@ public class CameraTracker {
             show("");
             
             if(dist < th) {
-                show("I:Á¡ °¨ÁöµÊ");
-                Vector3 v3 = v1.cross(v2).cross(v1); // ÃÖ´Ü°Å¸® º¤ÅÍ¿Í v1ÀÌ ÀÌ·ç´Â Æò¸éÀÇ ¹ý¼±º¤ÅÍ
+                show("I:ì  ê°ì§€ë¨");
+                Vector3 v3 = v1.cross(v2).cross(v1); // ìµœë‹¨ê±°ë¦¬ ë²¡í„°ì™€ v1ì´ ì´ë£¨ëŠ” í‰ë©´ì˜ ë²•ì„ ë²¡í„°
                 double u = v3.dot(p1.minus(p2)) / v2.dot(v3);
-                Vector3 p3 = p2.plus(v2.mul(u)); // l2Ãø ÃÖ±ÙÁ¡
-                Vector3 p4 = p3.plus(v1.cross(v2).mul(-dist / v1.cross(v2).abs())); // l1Ãø ÃÖ±ÙÁ¡
-                //show("Á÷¼± (p1,v1)Ãø ±ÙÁ¢Á¡: " + p3.getX() + ", " + p3.getY() + ", " + p3.getZ());
-                //show("Á÷¼± (p2,v2)Ãø ±ÙÁ¢Á¡: " + p4.getX() + ", " + p4.getY() + ", " + p4.getZ());
+                Vector3 p3 = p2.plus(v2.mul(u)); // l2ì¸¡ ìµœê·¼ì 
+                Vector3 p4 = p3.plus(v1.cross(v2).mul(-dist / v1.cross(v2).abs())); // l1ì¸¡ ìµœê·¼ì 
+                //show("ì§ì„  (p1,v1)ì¸¡ ê·¼ì ‘ì : " + p3.getX() + ", " + p3.getY() + ", " + p3.getZ());
+                //show("ì§ì„  (p2,v2)ì¸¡ ê·¼ì ‘ì : " + p4.getX() + ", " + p4.getY() + ", " + p4.getZ());
                 Vector3 p = p3.plus(p4).mul(0.5);
-                if (dist < nearDist) { // °°Àº Ä«¸Þ¶ó ¾È¿¡¼­ °¡Àå ¿ÀÂ÷ ÀûÀº °Å¸¸ ÀÎ½Ä
+                if (dist < nearDist) { // ê°™ì€ ì¹´ë©”ë¼ ì•ˆì—ì„œ ê°€ìž¥ ì˜¤ì°¨ ì ì€ ê±°ë§Œ ì¸ì‹
                     near = p;
                     nearDist = dist;
                 }
-                show("Áß°£Á¡: " + p.toString());
+                show("ì¤‘ê°„ì : " + p.toString());
             }
-            show("dist: " + dist + "(" + i + "¹ø Ä«¸Þ¶óÀÇ " + j + "¹øÂ° ±¤¼±°ú " + k + "¹ø Ä«¸Þ¶óÀÇ " + l + "¹øÂ° ±¤¼±)" );
+            show("dist: " + dist + "(" + i + "ë²ˆ ì¹´ë©”ë¼ì˜ " + j + "ë²ˆì§¸ ê´‘ì„ ê³¼ " + k + "ë²ˆ ì¹´ë©”ë¼ì˜ " + l + "ë²ˆì§¸ ê´‘ì„ )" );
         }
             if (nearDist != th && near != null) {
                 points.add(near);
@@ -84,6 +84,14 @@ public class CameraTracker {
         }
     }
     
+    public Vector3[] getPoints() {
+        Vector3[] point = new Vector3[points.size()];
+        for(int i = 0; i < point.length; i++)
+            point[i] = points.get(i);
+        
+        return point;
+    }
+    
     private void show(String str) { System.out.println(str); }
 }
 
@@ -91,7 +99,7 @@ public class CameraTracker {
 class Camera {
     public static double[] NOTE8_BACK = {4032, 3024, 0.567005, 0.445538};
     private double x, y, z, pan, tilt;
-    private double mw, mh, cx, cy, dw, dh; // ½Ã¾ß°¢ radian dw, dh
+    private double mw, mh, cx, cy, dw, dh; // ì‹œì•¼ê° radian dw, dh
     private ArrayList<Vector2> points = new ArrayList<Vector2>();
     private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
     
@@ -129,7 +137,7 @@ class Camera {
         for(int i = 0; i < points.size(); i++) {
             Vector2 pp = points.get(i);
             p = new Vector3((pp.x - cx) / proj, (pp.y - cy) / proj, 1);
-            //ÁÂÇ¥°è º¯È¯
+            //ì¢Œí‘œê³„ ë³€í™˜
             /*
             p = p.mul(1/p.abs()); // norm
             Quaternion q = new Quaternion(0, p);

@@ -11,80 +11,78 @@ public class ObjectTracker {
     private Quaternion dir;
     public int setTarget(double[] data) {
         if(data.length % 3 != 0) {
-            System.out.println("E:ÀÔ·Â µ¥ÀÌÅÍÀÇ °¹¼ö´Â 3ÀÇ ¹è¼öÀÌ¾î¾ß ÇÕ´Ï´Ù.");
+            System.out.println("E:ì…ë ¥ ë°ì´í„°ì˜ ê°¯ìˆ˜ëŠ” 3ì˜ ë°°ìˆ˜ì´ì–´ì•¼ í•©ë‹ˆë‹¤.");
             return -2;
         }
-        target = new Structure(data.length / 3);
-        target.setPointsPos(data);
+        target = new Structure(data);
         return 0;
     }
     public int putData(double[] data) {
         if(data.length % 3 != 0) {
-            System.out.println("E:ÀÔ·Â µ¥ÀÌÅÍÀÇ °¹¼ö´Â 3ÀÇ ¹è¼öÀÌ¾î¾ß ÇÕ´Ï´Ù.");
+            System.out.println("E:ì…ë ¥ ë°ì´í„°ì˜ ê°¯ìˆ˜ëŠ” 3ì˜ ë°°ìˆ˜ì´ì–´ì•¼ í•©ë‹ˆë‹¤.");
             return -2;
         }
-        source = new Structure(data.length / 3);
-        source.setPointsPos(data);
+        source = new Structure(data);
         return 0;
     }
     
     public int updateTracking() {
-        Vector3 tc = new Vector3(target.getSubCentroid(map)), sc = new Vector3(source.getCentroid());
+        Vector3 tc = target.getSubCentroid(map), sc = source.getCentroid();
         Vector3 t1, s1, vt, vs; //R1
         Vector3 t2, s2, vs1, vs2, vt1, vt2; //R2
         Quaternion q;
         dir = Quaternion.zero();
         for(int i = 0; i < map.length - 1; i++) {
             
-            t1 = target.getPoint(map[i]);
-            s1 = source.getPoint(i);
-            t2 = target.getPoint(map[i + 1]);
-            s2 = source.getPoint(i + 1);
+            t1 = target.get(map[i]);
+            s1 = source.get(i);
+            t2 = target.get(map[i + 1]);
+            s2 = source.get(i + 1);
             
             //R1
             vt = t1.minus(tc);
             vs = s1.minus(sc);
             
-            Vector3 rp, rm; // +-¹æÇâÀ¸·Î µ¹·Áº¼ º¤ÅÍ
-            double rad = Math.acos( vt.dot(vs) / (vt.abs()*vs.abs()) );
-            rp = (new Quaternion(0, vt).roll(Quaternion.getRoll(vt.cross(vs), rad))).toVector();
-            rm = (new Quaternion(0, vt).roll(Quaternion.getRoll(vt.cross(vs), -rad))).toVector();
-            if(Math.acos( rp.dot(vs) / (rp.abs()*vs.abs()) ) > Math.acos( rm.dot(vs) / (rp.abs()*vs.abs()) ))
+            Vector3 rp, rm; // +-ë°©í–¥ìœ¼ë¡œ ëŒë ¤ë³¼ ë²¡í„°
+            double rad = vt.angleOf(vs);
+            rp = vt.roll(vt.cross(vs), rad);
+            rm = vt.roll(vt.cross(vs), -rad);
+            if(rp.angleOf(vs) > rm.angleOf(vs))
                 rad = -rad;
             
             q = Quaternion.getRoll(vt.cross(vs), rad);
             
             //R2
-            show("È¸Àü Àü" + Math.acos( vt.dot(vs) / (vt.abs()*vs.abs()) ));
-            vt1 = (new Quaternion(0, vt).roll(q)).toVector();
-            show("È¸Àü ÈÄ" + Math.acos( vt1.dot(vs) / (vt1.abs()*vs.abs()) ));
+            show("íšŒì „ ì „" + vt.angleOf(vs));
+            vt1 = vt.roll(q);
+            show("íšŒì „ í›„" + vt1.angleOf(vs));
             vs1 = vs;
-            vt2 = (new Quaternion(0, t2.minus(tc)).roll(q)).toVector();
+            vt2 = t2.minus(tc).roll(q);
             vs2 = s2.minus(sc);
             
             Vector3 z = Vector3.Z();
             Quaternion q2;
-            rad = Math.acos( z.dot(vs1) / (z.abs()*vs1.abs()) );
-            rp = (new Quaternion(0, vt1).roll(Quaternion.getRoll(z.cross(vs1), rad))).toVector();
-            rm = (new Quaternion(0, vt1).roll(Quaternion.getRoll(z.cross(vs1), -rad))).toVector();
-            if(Math.acos( rp.dot(z) / (rp.abs()*z.abs()) ) > Math.acos( rm.dot(z) / (rm.abs()*z.abs()) ))
+            rad = z.angleOf(vs1);
+            rp = vt1.roll(z.cross(vs1), rad);
+            rm = vt1.roll(z.cross(vs1), -rad);
+            if(rp.angleOf(z) > rm.angleOf(z))
                 rad = -rad;
             
             q2 = Quaternion.getRoll(z.cross(vs1), rad);
             
-            show("È¸Àü Àü" + Math.acos( vt1.dot(z) / (vt1.abs()*z.abs()) ));
-            vt1 = (new Quaternion(0, vt1).roll(q2)).toVector();
-            show("È¸Àü ÈÄ" + Math.acos( vt1.dot(z) / (vt1.abs()*z.abs()) ));
-            vs1 = (new Quaternion(0, vs1).roll(q2)).toVector();
-            vt2 = (new Quaternion(0, vt2).roll(q2)).toVector();
-            vs2 = (new Quaternion(0, vs2).roll(q2)).toVector();
+            show("íšŒì „ ì „" + vt1.angleOf(z));
+            vt1 = vt1.roll(q2);
+            show("íšŒì „ í›„" + vt1.angleOf(z));
+            vs1 = vs1.roll(q2);
+            vt2 = vt2.roll(q2);
+            vs2 = vs2.roll(q2);
             
             Vector3 s = new Vector3(vs2.x, vs2.y, 0), t = new Vector3(vt2.x, vt2.y, 0);
             
             
-            rad = Math.acos( s.dot(t) / (s.abs()*t.abs()) );
-            rp = (new Quaternion(0, t).roll(Quaternion.getRoll(z, rad))).toVector();
-            rm = (new Quaternion(0, t).roll(Quaternion.getRoll(z, -rad))).toVector();
+            rad = s.angleOf(t);
+            rp = t.roll(z, rad);
+            rm = t.roll(z, -rad);
             if(Math.acos( rp.dot(s) / (rp.abs()*s.abs()) ) > Math.acos( rm.dot(s) / (rm.abs()*s.abs()) ))
                 rad = -rad;
             
@@ -92,21 +90,21 @@ public class ObjectTracker {
             
             
             
-            show("È¸Àü Àü" + Math.acos( s.dot(t) / (s.abs()*t.abs()) ));
-            t = (new Quaternion(0, t).roll(Quaternion.getRoll(z, +rad))).toVector();
-            show("È¸Àü ÈÄ" + Math.acos( s.dot(t) / (s.abs()*t.abs()) ));
+            show("íšŒì „ ì „" + s.angleOf(t));
+            t = t.roll(z, +rad);
+            show("íšŒì „ í›„" + s.angleOf(t));
             show(" direction: " + q.toString());
             
             dir = dir.plus(q);
         }
-        //¹æÇâ È®Á¤
+        //ë°©í–¥ í™•ì •
         dir = dir.mul((double)1 / (double)(map.length - 1));
         
-        //À§Ä¡ targetÀÇ 0,0,0ÀÌ ¿ÀÇÁ¼ÂÀÓ
-        tc = new Vector3(target.getSubCentroid(map));
-        sc = new Vector3(source.getCentroid());
+        //ìœ„ì¹˜ targetì˜ 0,0,0ì´ ì˜¤í”„ì…‹ì„
+        tc = target.getSubCentroid(map);
+        sc = source.getCentroid();
         
-        tc = (new Quaternion(0, tc)).roll(dir).toVector();
+        tc = tc.roll(dir);
         
         pos = sc.minus(tc).reduceError();
         
@@ -119,27 +117,21 @@ public class ObjectTracker {
         Vector3 p1, p2;
         double tmp;
         
-        
-        /*if(getDistTo(parent.getPoint(a[i])) < getDistTo(parent.getPoint(a[left]))) { // °Å¸®
-            Vector3 self = p1.addPoint(centroid.invertPoint());
-                        if(self.dot(parent.getPoint(a[i]).addPoint(centroid.invertPoint())) < self.dot(parent.getPoint(a[left]).addPoint(centroid.invertPoint()))) { // ³»Àû */
-        
-        
-        //À¯»çµµ ±¸ÇÔ
+        //ìœ ì‚¬ë„ êµ¬í•¨
         for(int i = 0; i < source.length(); i++) {
-            p1 = source.getPoint(i);
+            p1 = source.get(i);
             for(int j = 0; j < target.length(); j++) {
-                p2 = target.getPoint(j);
+                p2 = target.get(j);
                 tmp = 0d;
                 for(int k = 1; k < source.length(); k++) {
                     int min = 0;
-                    double dist1 = p1.getDistTo(source.getPoint(p1.distance[k]));
+                    double dist1 = p1.distTo(source.get(p1.distance[k]));
                     for(int l = 1; l < target.length(); l++) {
-                        double dist2 = p2.getDistTo(target.getPoint(p2.distance[l]));
-                        if(Math.abs(dist1 - dist2) < Math.abs(dist1 - p2.getDistTo(target.getPoint(p2.distance[min])))) //min
+                        double dist2 = p2.distTo(target.get(p2.distance[l]));
+                        if(Math.abs(dist1 - dist2) < Math.abs(dist1 - p2.distTo(target.get(p2.distance[min])))) //min
                             min = l;
                     }
-                    tmp += Math.abs(dist1 - p2.getDistTo(target.getPoint(p2.distance[min]))); // p1:source[i]¿Í p2:target[j]ÀÇ À¯»çµµ ÇÕ
+                    tmp += Math.abs(dist1 - p2.distTo(target.get(p2.distance[min]))); // p1:source[i]ì™€ p2:target[j]ì˜ ìœ ì‚¬ë„ í•©
                 }
                 diff[i][j] = tmp;
                 System.out.println("[" + i + "," + j + "]" + tmp);
@@ -163,15 +155,13 @@ public class ObjectTracker {
     public void showTargetInfo() {
         Vector3 point, point2;
         show("I:Target information(ObjectTracker)");
-        double[] pos = target.getCentroid();
-        show("Centroid: (" + pos[0] + ", " + pos[1] + ", " + pos[2] + ")");
+        show("Centroid: " + target.getCentroid().toString());
         for(int i = 0; i < target.length(); i++) {
-            show("pos[" + i + "]: " + target.getPoint(i).toString());
-            point = target.getPoint(i);
+            show("pos[" + i + "]: " + target.get(i).toString());
+            point = target.get(i);
             for(int j = 1; j < point.distance.length; j++) {
-                point2 = target.getPoint(point.distance[j]);
-                pos = point2.getPos();
-                show(" pos[" + point.distance[j] + "]: " + pos[0] + ", " + pos[1] + ", " + pos[2] + " (dist: " + point.getDistTo(point2) + ")");
+                point2 = target.get(point.distance[j]);
+                show(" pos[" + point.distance[j] + "]: " + point2.toString() + " (dist: " + point.distTo(point2) + ")");
             }
         }
         show("===================================");

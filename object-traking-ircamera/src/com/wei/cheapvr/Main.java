@@ -1,4 +1,5 @@
 package com.wei.cheapvr;
+
 import com.wei.cheapvr.Tracker.CameraTracker;
 import com.wei.cheapvr.Tracker.ObjectTracker;
 import com.wei.cheapvr.Tracker.Vector3;
@@ -22,13 +23,13 @@ public class Main {
                              39.641016326,97.942286441,0, 
                              -13.3015,9.639480,0};
         double[] img2_data = {0.0, 0.0, 0.0,
-        						0.0, 0.0, -100.0,
-        						0.0, 90.0, -90.0,
-        						0.0, 40.0, 0.0};
+0.0, 0.0, -100.0,
+0.0, 90.0, -90.0,
+0.0, 40.0, 0.0};
         double[] img3_data = {3.0, 0.0, 0.0,
-        						3.0, 90.0, -90.0,
-        						3.0, 0.0, -100.0,
-        						3.0, 40.0, 0.0};
+3.0, 90.0, -90.0,
+3.0, 0.0, -100.0,
+3.0, 40.0, 0.0};
         /*
         Structure str = new Structure(4);
         str.setPointsPos(hmd_data);
@@ -41,22 +42,15 @@ public class Main {
         //for(int i = 0; i < 30; i++) hmd_data[i] = Math.random() * 100;
         //*/
         //*
-        ObjectTracker track = new ObjectTracker();
         
-        track.setTarget(hmd_data);
-        track.putData(img3_data);
-        //track.showTargetInfo();
+        testObjectTracker(hmd_data, img3_data);
         
-        track.mapPoint();
-        track.showMap();
-        track.updateTracking();
-        track.showTrackingInfo();
         //*/
         
         //CameraTracker c = new CameraTracker();
         
         
-        //ÄõÅÍ´Ï¾ð Å×½ºÆ®
+        //ì¿¼í„°ë‹ˆì–¸ í…ŒìŠ¤íŠ¸
         /*
         Quaternion p = new Quaternion(0, 2, 0, 0);
         show(p.toString());
@@ -77,6 +71,18 @@ public class Main {
         show(p.roll(q2.qProduct(q1)).toString());
         //*/
     }
+    
+    public static void testObjectTracker(double[] hmd_data, double[] img_data) {
+        ObjectTracker track = new ObjectTracker();
+        
+        track.setTarget(hmd_data);
+        track.putData(img_data);
+        track.showTargetInfo();
+        
+        track.mapPoint();
+        track.showMap();
+        track.updateTracking();
+        track.showTrackingInfo();
+    }
 	public static void show(String str) { System.out.println(str); }
 }
- 
