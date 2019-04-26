@@ -1,10 +1,12 @@
 package com.wei.cheapvr;
 
 import com.wei.cheapvr.Tracker.CameraTracker;
+import com.wei.cheapvr.Tracker.ImageLoader;
 import com.wei.cheapvr.Tracker.ObjectTracker;
 import com.wei.cheapvr.Tracker.Vector3;
 import com.wei.cheapvr.Tracker.Quaternion;
 import com.wei.cheapvr.Tracker.Structure;
+import com.wei.cheapvr.Tracker.Vector2;
 
 public class Main {
     final static double ERROR_DEADZONE = 5;
@@ -42,12 +44,17 @@ public class Main {
         //for(int i = 0; i < 30; i++) hmd_data[i] = Math.random() * 100;
         //*/
         //*
+
+        testImageLoader("G:\\mk\\Desktop\\1556291731463.png");
+
+        testImageLoader("G:\\mk\\Desktop\\1556291807438.png");
         
-        testObjectTracker(hmd_data, img3_data);
+        //testImageLoader("G:\\mk\\Desktop\\20190427_000530.jpg");
+        //testObjectTracker(hmd_data, img3_data);
         
         //*/
         
-        //CameraTracker c = new CameraTracker();
+        CameraTracker c = new CameraTracker();
         
         
         //쿼터니언 테스트
@@ -70,6 +77,21 @@ public class Main {
         show(q2.qProduct(q1).toString());
         show(p.roll(q2.qProduct(q1)).toString());
         //*/
+    }
+    
+    public static void testImageLoader(String filename) {
+    	try {
+			ImageLoader loader = new ImageLoader(filename);
+			
+			Vector2[] data = loader.getData();
+			for(Vector2 d : data)
+				show(d.toString());
+			show("-----");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public static void testObjectTracker(double[] hmd_data, double[] img_data) {

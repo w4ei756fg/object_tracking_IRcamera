@@ -7,15 +7,15 @@ public class CameraTracker {
     private ArrayList<Camera> cam = new ArrayList<Camera>();
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
     public CameraTracker() {
-        addCamera(61.2,1.19,4.15, 0, 0);
-        addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2);
+        addCamera(61.2,1.19,4.15, 0, 0, 0);
+        addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
         updateCamera();
         findPoint();
         
         showPoints();
     }
-    public void addCamera(double x, double y, double z, double pan, double tilt) {
-        Camera c = new Camera(x, y, z, pan, tilt);
+    public void addCamera(double x, double y, double z, double pan, double tilt, int id) {
+        Camera c = new Camera(x, y, z, pan, tilt, id);
         c.setCameraParameter(Camera.NOTE8_BACK);
         //c.setCameraParameter(100,100, Math.PI/4,Math.PI/4);
         
@@ -41,10 +41,10 @@ public class CameraTracker {
         Vector3 near = new Vector3(0, 0, 0);
         
         for(int i = 0; i < tl.length - 1; i++)
-        for(int j = 0; j < 5/*tl[i].size()*/; j++) 
+        for(int j = 0; j < tl[i].size(); j++) 
         for(int k = i + 1; k < tl.length; k++) {
             nearDist = th;
-        for(int l = 5; l < 10/*tl[k].size()*/; l++)
+        for(int l = 0; l < tl[k].size(); l++)
         if (i != k) { // not self
             Vector3 p1 = cam.get(i).getPos(), v1 = tl[i].get(j), p2 = cam.get(k).getPos(), v2 = tl[k].get(l);
             double dist = distLineToLine(p1, v1, p2, v2);
@@ -99,16 +99,18 @@ public class CameraTracker {
 class Camera {
     public static double[] NOTE8_BACK = {4032, 3024, 0.567005, 0.445538};
     private double x, y, z, pan, tilt;
+    private int id;
     private double mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
     private ArrayList<Vector2> points = new ArrayList<Vector2>();
     private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
     
-    Camera(double x, double y, double z, double pan, double tilt) {
+    Camera(double x, double y, double z, double pan, double tilt, int id) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.pan = pan;
         this.tilt = tilt;
+        this.id = id;
     }
     
     void setCameraParameter(double mw, double mh, double dw, double dh) {
@@ -152,18 +154,21 @@ class Camera {
     }
      int findPoint() {
         points = new ArrayList<Vector2>(); // reset list
-        
-        points.add(new Vector2(1456, 1778));
-        points.add(new Vector2(1309, 1993));
-        points.add(new Vector2(2933, 2329));
-        points.add(new Vector2(2833, 1865));
-        points.add(new Vector2(2794, 1861));
-        
-        points.add(new Vector2(1118, 557));
-        points.add(new Vector2(2135, 1144));
-        points.add(new Vector2(2155, 1165));
-        points.add(new Vector2(1885, 2306));
-        points.add(new Vector2(1229, 1649));
+        if (id == 0) {
+        	points.add(new Vector2(1457, 1778));
+        	points.add(new Vector2(1309, 1993));
+        	points.add(new Vector2(2932, 2329));
+        	points.add(new Vector2(2833, 1865));
+        	points.add(new Vector2(2794, 1861));
+        }
+
+        if (id == 1) {
+        	points.add(new Vector2(1118, 557));
+        	points.add(new Vector2(2135, 1144));
+        	points.add(new Vector2(2155, 1165));
+        	points.add(new Vector2(1885, 2306));
+        	points.add(new Vector2(1229, 1649));
+        }
         //points.add(new Vector2(mw/2 + Math.random()*6 - 3, mh/2 + Math.random()*6 - 3));
         //points.add(new Vector2(mw/2 + Math.random()*6 - 3, mh/2 + Math.random()*6 - 103));
         //random

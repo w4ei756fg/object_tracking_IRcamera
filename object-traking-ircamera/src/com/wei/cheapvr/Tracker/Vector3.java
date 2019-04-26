@@ -22,11 +22,6 @@ public class Vector3 implements Number<Vector3> {
      */
     int[] distance;
     
-    /**
-     * the centroid of structure to which belongs this vector
-     */
-    private Vector3 centroid;
-    
     /** 
      * Creates a vector with (0,0,0)
      */
@@ -154,9 +149,9 @@ public class Vector3 implements Number<Vector3> {
         if(left >= right) return;
         last = left;
         for(i = left + 1; i <= right; i++) {
-            if(distTo(parent.get(a[i])) < distTo(parent.get(a[left]))) { // 거리
+            if(distTo(parent.get(a[i])) < distTo(parent.get(a[left]))) { // 嫄곕━
             //Vector3 self = this.addPoint(centroid.invertPoint());
-                        //if(self.scalaProduct(parent.getPoint(a[i]).addPoint(centroid.invertPoint())) < self.scalaProduct(parent.getPoint(a[left]).addPoint(centroid.invertPoint()))) { // 내적
+                        //if(self.scalaProduct(parent.getPoint(a[i]).addPoint(centroid.invertPoint())) < self.scalaProduct(parent.getPoint(a[left]).addPoint(centroid.invertPoint()))) { // �궡�쟻
                 swap(a, ++last, i);
             }
         }
