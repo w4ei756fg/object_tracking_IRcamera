@@ -27,7 +27,7 @@ public class ImageLoader {
 		for(int x = 0; x < w; x++)
 		for(int y = 0; y < h; y++) {
 			p = new Color(image.getRGB(x, y));
-			if(p.getRed() > 128 && p.getGreen() < 128 && p.getBlue() < 128)
+			if(p.getRed() > 200 && p.getGreen() < 128 && p.getBlue() < 128)
 				c++;
 			
 		}
@@ -38,7 +38,7 @@ public class ImageLoader {
 		for(int x = 0; x < w; x++)
 		for(int y = 0; y < h; y++) {
 			p = new Color(image.getRGB(x, y));
-			if(p.getRed() > 128 && p.getGreen() < 128 && p.getBlue() < 128)
+			if(p.getRed() > 200 && p.getGreen() < 128 && p.getBlue() < 128)
 				data[c++] = new Vector2(x, y);
 		}
 		

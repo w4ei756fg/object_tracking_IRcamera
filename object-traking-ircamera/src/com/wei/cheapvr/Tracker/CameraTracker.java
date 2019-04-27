@@ -7,8 +7,10 @@ public class CameraTracker {
     private ArrayList<Camera> cam = new ArrayList<Camera>();
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
     public CameraTracker() {
-        addCamera(61.2,1.19,4.15, 0, 0, 0);
-        addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
+    	addCamera(0, 0, 14, -0.85582, -0.680354, 1);
+    	addCamera(29.7, 0, 14, 0.950546, -0.683191, 2);
+        //addCamera(61.2,1.19,4.15, 0, 0, 0);
+        //addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
         updateCamera();
         findPoint();
         
@@ -154,6 +156,19 @@ class Camera {
     }
      int findPoint() {
         points = new ArrayList<Vector2>(); // reset list
+        try {
+			ImageLoader loader = new ImageLoader("G:\\mk\\Desktop\\" + id + ".png");
+			System.out.println("A:File opened(" + "G:\\mk\\Desktop\\" + id + ".png)");
+			Vector2[] data = loader.getData();
+			for(Vector2 d : data)
+				points.add(d);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+        /*
         if (id == 0) {
         	points.add(new Vector2(1457, 1778));
         	points.add(new Vector2(1309, 1993));
@@ -169,11 +184,7 @@ class Camera {
         	points.add(new Vector2(1885, 2306));
         	points.add(new Vector2(1229, 1649));
         }
-        //points.add(new Vector2(mw/2 + Math.random()*6 - 3, mh/2 + Math.random()*6 - 3));
-        //points.add(new Vector2(mw/2 + Math.random()*6 - 3, mh/2 + Math.random()*6 - 103));
-        //random
-        //for(int i = 0; i < tmp; i++)
-        //    points.add(new Vector2(Math.random()*mw, Math.random()*mh));
+        */
         
         return points.size();
     }
