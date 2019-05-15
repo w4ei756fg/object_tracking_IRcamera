@@ -10,14 +10,14 @@ public class Vector2 implements Number<Vector2>{
     /**
      * the component of this vector
      */
-    public double x, y;
+    public float x, y;
     
     /** 
      * Creates a vector with the given components
      * @param x The X-conponent
      * @param y The Y-conponent
      */
-    public Vector2(double x, double y) {
+    public Vector2(float x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -48,7 +48,7 @@ public class Vector2 implements Number<Vector2>{
      *
      * @return  The real number multiple of this vector
      */
-    public Vector2 mul(double r) {
+    public Vector2 mul(float r) {
         return new Vector2(x*r, y*r);
     }
     
@@ -67,8 +67,8 @@ public class Vector2 implements Number<Vector2>{
      *
      * @return      The distance
      */
-    public double distTo(Vector2 other) {
-        return Math.hypot(other.x - x, other.y - y);
+    public float distTo(Vector2 other) {
+        return (float)Math.hypot(other.x - x, other.y - y);
     }
     
     /** 
@@ -83,8 +83,8 @@ public class Vector2 implements Number<Vector2>{
      *
      * @return The magnitude
      */
-    public double abs() {
-        return Math.hypot(x, y);
+    public float abs() {
+        return (float)Math.hypot(x, y);
     }
     
 }

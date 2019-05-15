@@ -6,10 +6,10 @@ import com.wei.cheapvr.Tracker.Quaternion;
 public class ObjectTracker {
     private Structure target, source;
     private int[] map;
-    //private double x, y, z, dx, dy, dz;
+    //private float x, y, z, dx, dy, dz;
     private Vector3 pos = new Vector3(0, 0, 0);
     private Quaternion dir;
-    public int setTarget(double[] data) {
+    public int setTarget(float[] data) {
         if(data.length % 3 != 0) {
             System.out.println("E:입력 데이터의 갯수는 3의 배수이어야 합니다.");
             return -2;
@@ -17,7 +17,7 @@ public class ObjectTracker {
         target = new Structure(data);
         return 0;
     }
-    public int putData(double[] data) {
+    public int putData(float[] data) {
         if(data.length % 3 != 0) {
             System.out.println("E:입력 데이터의 갯수는 3의 배수이어야 합니다.");
             return -2;
@@ -29,7 +29,7 @@ public class ObjectTracker {
     public int updateTracking() {
         Vector3 tc = target.getSubCentroid(map), sc = source.getCentroid();
         Vector3 t1, s1, vt, vs; //R1
-        Vector3 t2, s2, vs1, vs2, vt1, vt2; //R2
+        Vector3 t2, s2, vs1, vs2, vs3, vt1, vt2, vt3; //R2
         Quaternion q;
         dir = Quaternion.zero();
         for(int i = 0; i < map.length - 1; i++) {
@@ -43,14 +43,7 @@ public class ObjectTracker {
             vt = t1.minus(tc);
             vs = s1.minus(sc);
             
-            Vector3 rp, rm; // +-방향으로 돌려볼 벡터
-            double rad = vt.angleOf(vs);
-            rp = vt.roll(vt.cross(vs), rad);
-            rm = vt.roll(vt.cross(vs), -rad);
-            if(rp.angleOf(vs) > rm.angleOf(vs))
-                rad = -rad;
-            
-            q = Quaternion.getRoll(vt.cross(vs), rad);
+            q = getRollToVector(vt, vs);
             
             //R2
             show("회전 전" + vt.angleOf(vs));
@@ -60,45 +53,27 @@ public class ObjectTracker {
             vt2 = t2.minus(tc).roll(q);
             vs2 = s2.minus(sc);
             
-            Vector3 z = Vector3.Z();
-            Quaternion q2;
-            rad = z.angleOf(vs1);
-            rp = vt1.roll(z.cross(vs1), rad);
-            rm = vt1.roll(z.cross(vs1), -rad);
-            if(rp.angleOf(z) > rm.angleOf(z))
+            vt3 = vt1.cross(vt2);
+            vs3 = vs1.cross(vs2);
+            
+            float rad = getRadianToVector(vt3, vs3);
+            Vector3 rp, rm; // +-방향으로 돌려볼 벡터
+            rp = vt2.roll(vt1, rad);
+            rm = vt2.roll(vt1, -rad);
+            if(rp.angleOf(vs2) > rm.angleOf(vs2))
                 rad = -rad;
             
-            q2 = Quaternion.getRoll(z.cross(vs1), rad);
+            show("회전 전" + vt3.angleOf(vs3));
+            vt2 = vt2.roll(vt1, rad);
+            show("회전 후" + vt1.cross(vt2).angleOf(vs3));
             
-            show("회전 전" + vt1.angleOf(z));
-            vt1 = vt1.roll(q2);
-            show("회전 후" + vt1.angleOf(z));
-            vs1 = vs1.roll(q2);
-            vt2 = vt2.roll(q2);
-            vs2 = vs2.roll(q2);
-            
-            Vector3 s = new Vector3(vs2.x, vs2.y, 0), t = new Vector3(vt2.x, vt2.y, 0);
-            
-            
-            rad = s.angleOf(t);
-            rp = t.roll(z, rad);
-            rm = t.roll(z, -rad);
-            if(Math.acos( rp.dot(s) / (rp.abs()*s.abs()) ) > Math.acos( rm.dot(s) / (rm.abs()*s.abs()) ))
-                rad = -rad;
-            
-            q = Quaternion.getRoll(vs, rad).qProduct(q);
-            
-            
-            
-            show("회전 전" + s.angleOf(t));
-            t = t.roll(z, +rad);
-            show("회전 후" + s.angleOf(t));
+            q = Quaternion.getRoll(vt1, rad).qProduct(q);
             show(" direction: " + q.toString());
             
             dir = dir.plus(q);
         }
         //방향 확정
-        dir = dir.mul((double)1 / (double)(map.length - 1));
+        dir = dir.mul((float)1 / (float)(map.length - 1));
         
         //위치 target의 0,0,0이 오프셋임
         tc = target.getSubCentroid(map);
@@ -110,24 +85,36 @@ public class ObjectTracker {
         
         return 0;
     }
+    Quaternion getRollToVector(Vector3 source, Vector3 target) {
+        return Quaternion.getRoll(source.cross(target), getRadianToVector(source, target));
+    }
+    float getRadianToVector(Vector3 source, Vector3 target) {
+        Vector3 rp, rm; // +-방향으로 돌려볼 벡터
+        float rad = source.angleOf(target);
+        rp = source.roll(source.cross(target), rad);
+        rm = source.roll(source.cross(target), -rad);
+            if(rp.angleOf(target) > rm.angleOf(target))
+                rad = -rad;
+        return rad;
+    }
     
     public int mapPoint() {
         int[] result = new int[source.length()];
-        double[][] diff = new double[source.length()][target.length()];
+        float[][] diff = new float[source.length()][target.length()];
         Vector3 p1, p2;
-        double tmp;
+        float tmp;
         
         //유사도 구함
         for(int i = 0; i < source.length(); i++) {
             p1 = source.get(i);
             for(int j = 0; j < target.length(); j++) {
                 p2 = target.get(j);
-                tmp = 0d;
+                tmp = 0f;
                 for(int k = 1; k < source.length(); k++) {
                     int min = 0;
-                    double dist1 = p1.distTo(source.get(p1.distance[k]));
+                    float dist1 = p1.distTo(source.get(p1.distance[k]));
                     for(int l = 1; l < target.length(); l++) {
-                        double dist2 = p2.distTo(target.get(p2.distance[l]));
+                        float dist2 = p2.distTo(target.get(p2.distance[l]));
                         if(Math.abs(dist1 - dist2) < Math.abs(dist1 - p2.distTo(target.get(p2.distance[min])))) //min
                             min = l;
                     }

@@ -7,8 +7,8 @@ public class CameraTracker {
     private ArrayList<Camera> cam = new ArrayList<Camera>();
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
     public CameraTracker() {
-    	addCamera(0, 0, 14, -0.85582, -0.680354, 1);
-    	addCamera(29.7, 0, 14, 0.950546, -0.683191, 2);
+    	addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, 1);
+    	addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, 2);
         //addCamera(61.2,1.19,4.15, 0, 0, 0);
         //addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
         updateCamera();
@@ -16,7 +16,7 @@ public class CameraTracker {
         
         showPoints();
     }
-    public void addCamera(double x, double y, double z, double pan, double tilt, int id) {
+    public void addCamera(float x, float y, float z, float pan, float tilt, int id) {
         Camera c = new Camera(x, y, z, pan, tilt, id);
         c.setCameraParameter(Camera.NOTE8_BACK);
         //c.setCameraParameter(100,100, Math.PI/4,Math.PI/4);
@@ -33,14 +33,14 @@ public class CameraTracker {
         }
     }
     public void findPoint() {
-        double th = 0.6;
+        float th = 0.6f;
         points = new ArrayList<Vector3>();
         ArrayList<Vector3>[] tl = new ArrayList[cam.size()];
         for(int i = 0; i < tl.length; i++)
             tl[i] = cam.get(i).getTraceLine();
         
-        double nearDist = th;
-        Vector3 near = new Vector3(0, 0, 0);
+        float nearDist = th;
+        Vector3 near = new Vector3();
         
         for(int i = 0; i < tl.length - 1; i++)
         for(int j = 0; j < tl[i].size(); j++) 
@@ -49,22 +49,27 @@ public class CameraTracker {
         for(int l = 0; l < tl[k].size(); l++)
         if (i != k) { // not self
             Vector3 p1 = cam.get(i).getPos(), v1 = tl[i].get(j), p2 = cam.get(k).getPos(), v2 = tl[k].get(l);
-            double dist = distLineToLine(p1, v1, p2, v2);
+            float dist = distLineToLine(p1, v1, p2, v2);
             
             show("");
             
             if(dist < th) {
                 show("I:점 감지됨");
                 Vector3 v3 = v1.cross(v2).cross(v1); // 최단거리 벡터와 v1이 이루는 평면의 법선벡터
-                double u = v3.dot(p1.minus(p2)) / v2.dot(v3);
+                float u = v3.dot(p1.minus(p2)) / v2.dot(v3);
                 Vector3 p3 = p2.plus(v2.mul(u)); // l2측 최근점
                 Vector3 p4 = p3.plus(v1.cross(v2).mul(-dist / v1.cross(v2).abs())); // l1측 최근점
                 //show("직선 (p1,v1)측 근접점: " + p3.getX() + ", " + p3.getY() + ", " + p3.getZ());
                 //show("직선 (p2,v2)측 근접점: " + p4.getX() + ", " + p4.getY() + ", " + p4.getZ());
-                Vector3 p = p3.plus(p4).mul(0.5);
-                if (dist < nearDist) { // 같은 카메라 안에서 가장 오차 적은 거만 인식
-                    near = p;
-                    nearDist = dist;
+                Vector3 p = p3.plus(p4).mul(0.5f);
+                if (dist < nearDist) { // 같은 카메라 안에서 하나만 인식
+                    if (nearDist == th) {
+                        near = p;
+                        nearDist = dist;
+                    } else {
+                        near = null;
+                        nearDist = -1;
+                    }
                 }
                 show("중간점: " + p.toString());
             }
@@ -76,7 +81,7 @@ public class CameraTracker {
             }
         }
     }
-    double distLineToLine(Vector3 p1, Vector3 v1, Vector3 p2, Vector3 v2) {
+    float distLineToLine(Vector3 p1, Vector3 v1, Vector3 p2, Vector3 v2) {
         return Math.abs(p2.minus(p1).dot(v1.cross(v2))) / v1.cross(v2).abs();
     }
     public void showPoints() {
@@ -99,14 +104,14 @@ public class CameraTracker {
 
 
 class Camera {
-    public static double[] NOTE8_BACK = {4032, 3024, 0.567005, 0.445538};
-    private double x, y, z, pan, tilt;
+    public static float[] NOTE8_BACK = {4032, 3024, 0.567005f, 0.445538f};
+    private float x, y, z, pan, tilt;
     private int id;
-    private double mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
+    private float mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
     private ArrayList<Vector2> points = new ArrayList<Vector2>();
     private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
     
-    Camera(double x, double y, double z, double pan, double tilt, int id) {
+    Camera(float x, float y, float z, float pan, float tilt, int id) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -115,7 +120,7 @@ class Camera {
         this.id = id;
     }
     
-    void setCameraParameter(double mw, double mh, double dw, double dh) {
+    void setCameraParameter(float mw, float mh, float dw, float dh) {
         this.mw = mw;
         this.mh = mh;
         cx = this.mw / 2;
@@ -123,7 +128,7 @@ class Camera {
         this.dw = dw;
         this.dh = dh;
     }
-    void setCameraParameter(double[] profile) {
+    void setCameraParameter(float[] profile) {
         this.mw = profile[0];
         this.mh = profile[1];
         cx = this.mw / 2;
@@ -135,7 +140,7 @@ class Camera {
     int updateTraceLine() {
         if(findPoint() == 0) return -2;
         traceLine = new ArrayList<Vector3>(); // reset list
-        double proj = mw/2 / Math.tan(dw);
+        float proj = mw/2 / (float)Math.tan(dw);
         Vector3 p;
         
         for(int i = 0; i < points.size(); i++) {
@@ -148,7 +153,7 @@ class Camera {
             q = q.roll(Quaternion.getRollFromEuler(-Math.PI/2 + tilt, 0, pan));
             p = q.toVector();
             */
-            p.roll(-Math.PI/2 + tilt, 0, pan);
+            p.roll(-(float)Math.PI/2 + tilt, 0, pan);
             traceLine.add(p);
         }
         

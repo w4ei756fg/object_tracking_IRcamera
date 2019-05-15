@@ -10,7 +10,7 @@ public class Vector3 implements Number<Vector3> {
     /**
      * the component of this vector
      */
-    public double x, y, z;
+    public float x, y, z;
     
     /**
      * the structure to which belongs this vector
@@ -37,7 +37,7 @@ public class Vector3 implements Number<Vector3> {
      * @param y The Y-conponent
      * @param z The Z-conponent
      */
-    public Vector3(double x, double y, double z) {
+    public Vector3(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -47,7 +47,7 @@ public class Vector3 implements Number<Vector3> {
      * Creates a vector with the given components
      * @param pos The conponents
      */
-    public Vector3(double[] pos) {
+    public Vector3(float[] pos) {
 		this.x = pos[0];
 		this.y = pos[1];
 		this.z = pos[2];
@@ -106,7 +106,7 @@ public class Vector3 implements Number<Vector3> {
      *
      * @return  The real number multiple of this vector
      */
-    public Vector3 mul(double r) {
+    public Vector3 mul(float r) {
         return new Vector3(x*r, y*r, z*r);
     }
     
@@ -116,7 +116,7 @@ public class Vector3 implements Number<Vector3> {
      *
      * @return      The distance
      */
-    public double distTo(Vector3 other) {
+    public float distTo(Vector3 other) {
         return sqrt(pow(abs(x - other.x), 2) + 
                         pow(abs(y - other.y), 2) + 
                         pow(abs(z - other.z), 2));
@@ -128,8 +128,8 @@ public class Vector3 implements Number<Vector3> {
      *
      * @return      The angle
      */
-    public double angleOf(Vector3 other) {
-        return Math.acos( this.dot(other) / (this.abs()*other.abs()) );
+    public float angleOf(Vector3 other) {
+        return (float)Math.acos((float)(this.dot(other) / (this.abs()*other.abs()) ));
     }
     
     /** 
@@ -188,7 +188,7 @@ public class Vector3 implements Number<Vector3> {
      * @param y The Y-conponent
      * @param z The Z-conponent
      */
-    public void set(double x, double y, double z) {
+    public void set(float x, float y, float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -200,8 +200,8 @@ public class Vector3 implements Number<Vector3> {
      * @param ry The yaw angle
      * @param rz The roll angle
      */
-    public void roll(double rx, double ry, double rz) {
-        double x = this.x, y = this.y, z = this.z;
+    public void roll(float rx, float ry, float rz) {
+        float x = this.x, y = this.y, z = this.z;
         this.x = (cos(rz)*cos(ry))*x + (cos(rz)*sin(ry)*sin(rx) - sin(rz)*cos(rx))*y + (sin(rz)*sin(rx) + cos(rz)*sin(ry)*cos(rx))*z;
         this.y = (sin(rz)*cos(ry))*x + (cos(rz)*cos(rx) + sin(rz)*sin(ry)*sin(rx))*y + (sin(rz)*sin(ry)*cos(rx) - cos(rz)*sin(rx))*z;
         this.z = -sin(ry)*x + cos(ry)*sin(rx)*y + cos(ry)*cos(rx)*z;
@@ -214,7 +214,7 @@ public class Vector3 implements Number<Vector3> {
      *
      * @return     the rotated vector
      */
-    public Vector3 roll(Vector3 axis, double rad) {
+    public Vector3 roll(Vector3 axis, float rad) {
         return roll(Quaternion.getRoll(axis, rad));
     }
     
@@ -230,20 +230,20 @@ public class Vector3 implements Number<Vector3> {
     public Vector3 cross(Vector3 p) {
         return new Vector3(y*p.z - z*p.y, z*p.x - x*p.z, x*p.y - y*p.x);
     }
-    public double dot(Vector3 p) { return x*p.x + y*p.y + z*p.z; }
-    double[] getPos() {
-        double[] pos = {x, y, z};
+    public float dot(Vector3 p) { return x*p.x + y*p.y + z*p.z; }
+    float[] getPos() {
+        float[] pos = {x, y, z};
 		return pos;
     }
     public String toString() { return "[" + x + ", " + y + "," + z + "]"; }
-    public double abs() { return Math.sqrt(x*x + y*y + z*z); }
+    public float abs() { return (float)Math.sqrt(x*x + y*y + z*z); }
     public Vector3 norm() { return this.mul(1/abs()) ;}
     public Vector3 reduceError() {
-        return new Vector3(Math.round(x * 100000000000L) / 100000000000D, Math.round(y * 100000000000L) / 100000000000D, Math.round(z * 100000000000L) / 100000000000D);
+        return new Vector3(Math.round(x * 100000) / 100000F, Math.round(y * 100000) / 100000F, Math.round(z * 100000) / 100000F);
     }
-    private static double sqrt(double x) { return Math.sqrt(x); }
-    private static double abs(double x) { return Math.abs(x); }
-    private static double pow(double a, double b) { return Math.pow(a, b); }
-    private static double sin(double x) { return Math.sin(x); }
-    private static double cos(double x) { return Math.cos(x); }
+    private static float sqrt(float x) { return (float)Math.sqrt(x); }
+    private static float abs(float x) { return (float)Math.abs(x); }
+    private static float pow(float a, float b) { return (float)Math.pow(a, b); }
+    private static float sin(float x) { return (float)Math.sin(x); }
+    private static float cos(float x) { return (float)Math.cos(x); }
 }

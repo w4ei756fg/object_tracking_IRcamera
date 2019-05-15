@@ -9,29 +9,29 @@ import com.wei.cheapvr.Tracker.Structure;
 import com.wei.cheapvr.Tracker.Vector2;
 
 public class Main {
-    final static double ERROR_DEADZONE = 5;
+    final static float ERROR_DEADZONE = 5;
 
     /**
      * @param args
      */
     public static void main(String[] args) {
         //*
-	    double[] hmd_data = {0d,0d,0d, 
-                             100d,0d,0d, 
-                             90d,90d,0d, 
-                             0d,40d,0d};
-        double[] img_data = {93.30127,25,0, 
-                             6.698729,-25,0,
-                             39.641016326,97.942286441,0, 
-                             -13.3015,9.639480,0};
-        double[] img2_data = {0.0, 0.0, 0.0,
-0.0, 0.0, -100.0,
-0.0, 90.0, -90.0,
-0.0, 40.0, 0.0};
-        double[] img3_data = {3.0, 0.0, 0.0,
-3.0, 90.0, -90.0,
-3.0, 0.0, -100.0,
-3.0, 40.0, 0.0};
+	    float[] hmd_data = {0f,0f,0f, 
+                             100f,0f,0f, 
+                             90f,90f,0f, 
+                             0f,40f,0f};
+        float[] img_data = {93.30127f,25f,0f, 
+                             6.698729f,-25f,0f,
+                             39.641016f,97.942286f,0f, 
+                             -13.3015f,9.639480f,0f};
+        float[] img2_data = {0.0f, 0.0f, 0.0f,
+0.0f, 0.0f, -100.0f,
+0.0f, 90.0f, -90.0f,
+0.0f, 40.0f, 0.0f};
+        float[] img3_data = {3.0f, 0.0f, 0.0f,
+3.0f, 90.0f, -90.0f,
+3.0f, 0.0f, -100.0f,
+3.0f, 40.0f, 0.0f};
         /*
         Structure str = new Structure(4);
         str.setPointsPos(hmd_data);
@@ -40,7 +40,7 @@ public class Main {
         str.roll(0, 90d/180d*Math.PI, 0);
         for(int i = 0; i < str.length(); i++)
             show("" + str.getPointPos(i)[0] + ", " + str.getPointPos(i)[1] + ", " + str.getPointPos(i)[2]);
-        //double[] hmd_data = new double[30];
+        //float[] hmd_data = new float[30];
         //for(int i = 0; i < 30; i++) hmd_data[i] = Math.random() * 100;
         //*/
         //*
@@ -50,11 +50,11 @@ public class Main {
         //testImageLoader("G:\\mk\\Desktop\\1556291807438.png");
         
         //testImageLoader("G:\\mk\\Desktop\\20190427_000530.jpg");
-        //testObjectTracker(hmd_data, img3_data);
+        testObjectTracker(hmd_data, img3_data);
         
         //*/
         
-        CameraTracker c = new CameraTracker();
+        //CameraTracker c = new CameraTracker();
         
         
         //쿼터니언 테스트
@@ -62,7 +62,7 @@ public class Main {
         Quaternion p = new Quaternion(0, 2, 0, 0);
         show(p.toString());
         
-        double rad = Math.PI/2;
+        float rad = Math.PI/2;
         Vector3 axis = new Vector3(0, 0, 1);
         show(axis.norm().toString());
         Quaternion q1 = Quaternion.getRoll(axis, rad);
@@ -94,7 +94,7 @@ public class Main {
 		}
     }
     
-    public static void testObjectTracker(double[] hmd_data, double[] img_data) {
+    public static void testObjectTracker(float[] hmd_data, float[] img_data) {
         ObjectTracker track = new ObjectTracker();
         
         track.setTarget(hmd_data);

@@ -12,7 +12,7 @@ public class Structure {
 
 	private ArrayList<Vector3> points = new ArrayList<Vector3>();
 	
-	public Structure(double[] data) {
+	public Structure(float[] data) {
         for(int i = 0; i < data.length; i += 3)
             points.add(new Vector3(data[i], data[i + 1], data[i + 2]));
         for(int i = 0; i < points.size(); i++) {
@@ -33,7 +33,7 @@ public class Structure {
         return points.get(i);
     }
     
-	public void set(int i, double x, double y, double z) {
+	public void set(int i, float x, float y, float z) {
 	    points.get(i).set(x, y, z);
 	}
 	
@@ -59,7 +59,7 @@ public class Structure {
         while(it.hasNext())
             centroid = centroid.plus(it.next());
         
-        return centroid.mul(1/(double)points.size());
+        return centroid.mul(1/(float)points.size());
     }
     
     Vector3 getSubCentroid(int[] map) {
@@ -67,7 +67,7 @@ public class Structure {
         for(int i = 0; i < map.length; i++)
             centroid = centroid.plus(points.get(i));
         
-        return centroid.mul(1/(double)map.length);
+        return centroid.mul(1/(float)map.length);
     }
     
     /**
@@ -76,7 +76,7 @@ public class Structure {
      * @param ry The yaw angle
      * @param rz The roll angle
      */
-    public void roll(double rx, double ry, double rz) {
+    public void roll(float rx, float ry, float rz) {
         Iterator<Vector3> it = points.iterator();
         Vector3 p;
         while(it.hasNext()) {
@@ -90,7 +90,7 @@ public class Structure {
      * @param axis rotation axis
      * @param rad  angle to rotate
      */
-    public void roll(Vector3 axis, double rad) {
+    public void roll(Vector3 axis, float rad) {
         roll(Quaternion.getRoll(axis, rad));
     }
     
