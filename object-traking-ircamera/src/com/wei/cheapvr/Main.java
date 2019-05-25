@@ -50,12 +50,21 @@ public class Main {
         //testImageLoader("G:\\mk\\Desktop\\1556291807438.png");
         
         //testImageLoader("G:\\mk\\Desktop\\20190427_000530.jpg");
-        testObjectTracker(hmd_data, img3_data);
+        //----
+        
+        ImageLoader imageLoader = new ImageLoader();
+        
+        
+        //-----
+        //testObjectTracker(hmd_data, img3_data);
+        
+        //--------
         
         //*/
         
         //CameraTracker c = new CameraTracker();
         
+        //------
         
         //쿼터니언 테스트
         /*
