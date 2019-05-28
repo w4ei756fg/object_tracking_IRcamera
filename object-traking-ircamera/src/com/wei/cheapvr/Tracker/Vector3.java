@@ -227,17 +227,55 @@ public class Vector3 implements Number<Vector3> {
     public Vector3 roll(Quaternion q) {
         return q.mul(new Quaternion(0, this)).mul(q.conj()).toVector();
     }
+    
+    /** 
+     * Crosses the given vector to this vector
+     * @param p The vector
+     *
+     * @return  The cross product of both vectors
+     */
     public Vector3 cross(Vector3 p) {
         return new Vector3(y*p.z - z*p.y, z*p.x - x*p.z, x*p.y - y*p.x);
     }
+    
+    /** 
+     * Dots the given vector to this vector
+     * @param p The vector
+     *
+     * @return  The dot product of both vectors
+     */
     public float dot(Vector3 p) { return x*p.x + y*p.y + z*p.z; }
     float[] getPos() {
         float[] pos = {x, y, z};
 		return pos;
     }
+    
+    /** 
+     * Return components of this vector
+     *
+     * @return The text of components of this vector
+     */
     public String toString() { return "[" + x + ", " + y + "," + z + "]"; }
+    
+    /** 
+     * Return absolute value of this vector
+     *
+     * @return The absolute value of this vector
+     */
     public float abs() { return (float)Math.sqrt(x*x + y*y + z*z); }
+    
+    /** 
+     * Change the length of this vector to 1
+     *
+     * @return The normalized vector
+     */
     public Vector3 norm() { return this.mul(1/abs()) ;}
+    
+    /** 
+     * Remove floating point error from components
+     *
+     * @return The vector
+     */
     public Vector3 reduceError() {
         return new Vector3(Math.round(x * 100000) / 100000F, Math.round(y * 100000) / 100000F, Math.round(z * 100000) / 100000F);
     }

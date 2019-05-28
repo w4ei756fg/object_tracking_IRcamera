@@ -52,7 +52,7 @@ public class Main {
         //testImageLoader("G:\\mk\\Desktop\\20190427_000530.jpg");
         //----
         
-        ImageLoader imageLoader = new ImageLoader();
+        ImageLoader imageLoader = new ImageLoader("172.30.1.55");
         
         
         //-----
@@ -62,8 +62,7 @@ public class Main {
         
         //*/
         
-        //CameraTracker c = new CameraTracker();
-        
+        testCameraTracker();
         //------
         
         //쿼터니언 테스트
@@ -88,7 +87,19 @@ public class Main {
         //*/
     }
     
-    public static void testImageLoader(String filename) {
+    public static void testCameraTracker() {
+		// TODO Auto-generated method stub
+    	CameraTracker ct = new CameraTracker();
+
+    	ct.addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, "172.30.1.55");
+    	ct.addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, "172.30.1.56");
+        //ct.addCamera(61.2,1.19,4.15, 0, 0, 0);
+        //ct.addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
+        
+        ct.findPoint();
+	}
+
+	public static void testImageLoader(String filename) {
     	try {
 			ImageLoader loader = new ImageLoader(filename);
 			

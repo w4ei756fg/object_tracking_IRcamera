@@ -3,21 +3,31 @@ package com.wei.cheapvr.Tracker;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * CameraTracker
+ * Find tracking points from images that IR cameras captured
+ * , and save to 'points(ArrayList<Vector3>)'
+ * CameraTracker can have camera objects. Cameras stored to 'cam(ArrayList<Camera>)'
+ * 
+ * 정확한 의미 전달을 위해 메소드 주석은 주로 한국어로 작성됨
+ * For expressing exactly, this class's javadoc is written in Korean. Sorry for my bad English..
+ *
+ * @author wei
+ */
 public class CameraTracker {
+	
+	/**
+	 * CameraTracker에 등록된 카메라
+	 */
     private ArrayList<Camera> cam = new ArrayList<Camera>();
+	
+	/**
+	 * 카메라로부터 추적한 point들
+	 */
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
-    public CameraTracker() {
-    	addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, 1);
-    	addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, 2);
-        //addCamera(61.2,1.19,4.15, 0, 0, 0);
-        //addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
-        updateCamera();
-        findPoint();
-        
-        showPoints();
-    }
-    public void addCamera(float x, float y, float z, float pan, float tilt, int id) {
-        Camera c = new Camera(x, y, z, pan, tilt, id);
+
+    public void addCamera(float x, float y, float z, float pan, float tilt, String ip) {
+        Camera c = new Camera(x, y, z, pan, tilt, ip);
         c.setCameraParameter(Camera.NOTE8_BACK);
         //c.setCameraParameter(100,100, Math.PI/4,Math.PI/4);
         
@@ -33,21 +43,24 @@ public class CameraTracker {
         }
     }
     public void findPoint() {
-        float th = 0.6f;
+    	updateCamera(); // Capture camera 
+    	
+        float th = 0.6f; // 이 값보다 먼 거리의 traceLine은 서로 다른 tracking point를 지나는 것으로 간주함
         points = new ArrayList<Vector3>();
-        ArrayList<Vector3>[] tl = new ArrayList[cam.size()];
+        ArrayList<Vector3>[] tl = new ArrayList[cam.size()]; // i번 카메라에서 캡처된 traceLine들을 저장함
         for(int i = 0; i < tl.length; i++)
-            tl[i] = cam.get(i).getTraceLine();
+            tl[i] = cam.get(i).getTraceLine(); // camera에서 traceLine을 불러옵니다
         
         float nearDist = th;
         Vector3 near = new Vector3();
         
+        //traceLine으로부터 교차점 찾기
         for(int i = 0; i < tl.length - 1; i++)
         for(int j = 0; j < tl[i].size(); j++) 
         for(int k = i + 1; k < tl.length; k++) {
             nearDist = th;
         for(int l = 0; l < tl[k].size(); l++)
-        if (i != k) { // not self
+        if (i != k) { // 비교하는 traceLine이 자신이 아닐 때만
             Vector3 p1 = cam.get(i).getPos(), v1 = tl[i].get(j), p2 = cam.get(k).getPos(), v2 = tl[k].get(l);
             float dist = distLineToLine(p1, v1, p2, v2);
             
@@ -55,14 +68,14 @@ public class CameraTracker {
             
             if(dist < th) {
                 show("I:점 감지됨");
-                Vector3 v3 = v1.cross(v2).cross(v1); // 최단거리 벡터와 v1이 이루는 평면의 법선벡터
-                float u = v3.dot(p1.minus(p2)) / v2.dot(v3);
-                Vector3 p3 = p2.plus(v2.mul(u)); // l2측 최근점
-                Vector3 p4 = p3.plus(v1.cross(v2).mul(-dist / v1.cross(v2).abs())); // l1측 최근점
+                Vector3 v3 = v1.cross(v2).cross(v1); // 최단거리 벡터와 v1이 이루는 평면의 법선벡터  v3 = (v1×v2)×v1
+                float u = v3.dot(p1.minus(p2)) / v2.dot(v3); // u = (v3·(p1-p2)) / (v2·v3)
+                Vector3 p3 = p2.plus(v2.mul(u)); // l2측 최근점   p3 = p2 + u·v2
+                Vector3 p4 = p3.plus(v1.cross(v2).mul(-dist / v1.cross(v2).abs())); // l1측 최근점  p4 = p3 + ( -dist / abs(v1×v2) )·(v1×v2)
+                Vector3 p = p3.plus(p4).mul(0.5f); // (p3 + p4) / 2
                 //show("직선 (p1,v1)측 근접점: " + p3.getX() + ", " + p3.getY() + ", " + p3.getZ());
                 //show("직선 (p2,v2)측 근접점: " + p4.getX() + ", " + p4.getY() + ", " + p4.getZ());
-                Vector3 p = p3.plus(p4).mul(0.5f);
-                if (dist < nearDist) { // 같은 카메라 안에서 하나만 인식
+                if (dist < nearDist) { // 같은 카메라 안에서 하나만 인식(고스트 현상 방지)
                     if (nearDist == th) {
                         near = p;
                         nearDist = dist;
@@ -80,8 +93,13 @@ public class CameraTracker {
                 
             }
         }
+        
+        showPoints();
     }
     float distLineToLine(Vector3 p1, Vector3 v1, Vector3 p2, Vector3 v2) {
+    	/** 
+    	 * return (p2 - p1)·(v1×v2) / abs(v1×v2)
+    	 */
         return Math.abs(p2.minus(p1).dot(v1.cross(v2))) / v1.cross(v2).abs();
     }
     public void showPoints() {
@@ -106,18 +124,20 @@ public class CameraTracker {
 class Camera {
     public static float[] NOTE8_BACK = {4032, 3024, 0.567005f, 0.445538f};
     private float x, y, z, pan, tilt;
-    private int id;
+    private String ip;
+    private ImageLoader il;
     private float mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
     private ArrayList<Vector2> points = new ArrayList<Vector2>();
     private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
     
-    Camera(float x, float y, float z, float pan, float tilt, int id) {
+    Camera(float x, float y, float z, float pan, float tilt, String ip) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.pan = pan;
         this.tilt = tilt;
-        this.id = id;
+        this.ip = ip;
+        il = new ImageLoader(this.ip);
     }
     
     void setCameraParameter(float mw, float mh, float dw, float dh) {
@@ -162,6 +182,21 @@ class Camera {
      int findPoint() {
         points = new ArrayList<Vector2>(); // reset list
         try {
+			ImageLoader loader = new ImageLoader(ip);
+			
+			Vector2[] data = loader.getData();
+			for(Vector2 d : data)
+				points.add(d);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+        
+        /*
+         * load from local image (for test)
+        try {
 			ImageLoader loader = new ImageLoader("G:\\mk\\Desktop\\" + id + ".png");
 			System.out.println("A:File opened(" + "G:\\mk\\Desktop\\" + id + ".png)");
 			Vector2[] data = loader.getData();
@@ -173,7 +208,9 @@ class Camera {
 			e.printStackTrace();
 			return 0;
 		}
+		*/
         /*
+         * input data directly (for test)
         if (id == 0) {
         	points.add(new Vector2(1457, 1778));
         	points.add(new Vector2(1309, 1993));

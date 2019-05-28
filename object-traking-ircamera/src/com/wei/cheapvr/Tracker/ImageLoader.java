@@ -20,45 +20,42 @@ import org.opencv.videoio.VideoCapture;
 
 
 public class ImageLoader {
-	BufferedImage image = null;
+	String esp_ip;
+	VideoCapture cap;
 	int w, h;
-	public ImageLoader(){
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		String esp_ip = "172.30.1.55";
+	public ImageLoader(String ip){
+		esp_ip = ip;
 		
-		show("Stream Start");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		String videoAddress = "http://" + esp_ip +"/capture";
-		VideoCapture cap = new VideoCapture(videoAddress);
+		cap = new VideoCapture(videoAddress);
 		openVideoFromWeb(cap, videoAddress);
-		show("completed");
 	}
 	
 	int openVideoFromWeb(VideoCapture cap, String address) {
-		Mat image = new Mat();
-
-		for(int i = 0; i < 100; i++) {
-			if(!cap.open(address)) {
-				show("Error opening video stream");
-				//return -1;
-			} else {
-				if(!cap.read(image)) {
-					show("No frame");
-				}
-				else {
-					show("Loading Frame");
-					try {
-						displayImage(ImageLoader.Mat2BufferedImage(image));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
+		
+		if(!cap.open(address)) {
+			show("Error opening video stream");
+			return -1;
 		}
+		show("Opened camera successfully");
 		return 0;
 	}
 	
+	public BufferedImage capture() throws Exception{
+		Mat image = new Mat();
+		
+		if(!cap.read(image)) {
+			show("No frame");
+			return null;
+		}
+		else {
+			return Mat2BufferedImage(image);
+			//displayImage(Mat2BufferedImage(image));
+		}
+	}
 	
+	/*
 	public ImageLoader(String filename) throws Exception{
 		try {
 			image = ImageIO.read(new File(filename));
@@ -70,8 +67,12 @@ public class ImageLoader {
 		}
 	}
 	
-	public Vector2[] getData() {
+	*/
+	
+	public Vector2[] getData() throws Exception {
+		BufferedImage image = capture();
 		Vector2[] data;
+		
 		int c = 0;
 		Color p;
 		for(int x = 0; x < w; x++)
