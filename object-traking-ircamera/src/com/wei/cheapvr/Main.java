@@ -52,7 +52,7 @@ public class Main {
         //testImageLoader("G:\\mk\\Desktop\\20190427_000530.jpg");
         //----
         
-        ImageLoader imageLoader = new ImageLoader("172.30.1.55");
+        //ImageLoader imageLoader = new ImageLoader("172.30.1.55");
         
         
         //-----
@@ -96,7 +96,9 @@ public class Main {
         //ct.addCamera(61.2,1.19,4.15, 0, 0, 0);
         //ct.addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
         
-        ct.findPoint();
+    	for(int i = 0; i < 100; i++) {
+            ct.findPoint();
+    	}
 	}
 
 	public static void testImageLoader(String filename) {

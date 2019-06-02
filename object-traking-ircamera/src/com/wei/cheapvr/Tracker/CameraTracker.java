@@ -13,6 +13,9 @@ import java.util.Iterator;
  * For expressing exactly, this class's javadoc is written in Korean. Sorry for my bad English..
  *
  * @author wei
+ * 
+ * @see Camera
+ * @see ImageLoader
  */
 public class CameraTracker {
 	
@@ -25,14 +28,31 @@ public class CameraTracker {
 	 * 카메라로부터 추적한 point들
 	 */
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
-
+    
+	/**
+	 * CameraTracker에 새로운 카메라를 추가합니다
+     * @param x 카메라의 X좌표
+     * @param y 카메라의 Y좌표
+     * @param z 카메라의 Z좌표
+     * @param pan 카메라의 yaw방향
+     * @param tilt 카메라의 pitch방향
+     * @param ip 카메라의 source ip
+     * 
+     * @see Camera
+	 */
     public void addCamera(float x, float y, float z, float pan, float tilt, String ip) {
         Camera c = new Camera(x, y, z, pan, tilt, ip);
         c.setCameraParameter(Camera.NOTE8_BACK);
-        //c.setCameraParameter(100,100, Math.PI/4,Math.PI/4);
         
         cam.add(c);
     }
+    
+	/**
+	 * 모든 카메라로부터 traceLine을 새로 로드합니다
+	 * 
+	 * @see #findPoint()
+	 * @see Camera#updateTraceLine()
+	 */
     public void updateCamera() {
         Iterator<Camera> iterator = cam.iterator();
         Camera c;
@@ -42,6 +62,13 @@ public class CameraTracker {
             c.showInfo();
         }
     }
+    
+	/**
+	 * traceLine으로부터 point를 찾아 points에 저장합니다
+	 * 
+	 * @see #updateCamera()
+	 * @see #points
+	 */
     public void findPoint() {
     	updateCamera(); // Capture camera 
     	
@@ -123,9 +150,10 @@ public class CameraTracker {
 
 class Camera {
     public static float[] NOTE8_BACK = {4032, 3024, 0.567005f, 0.445538f};
+    public static float[] OV2640 = {640, 480, 0.349344f, 0.265042f};
     private float x, y, z, pan, tilt;
     private String ip;
-    private ImageLoader il;
+    private ImageLoader imgLoader;
     private float mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
     private ArrayList<Vector2> points = new ArrayList<Vector2>();
     private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
@@ -137,7 +165,7 @@ class Camera {
         this.pan = pan;
         this.tilt = tilt;
         this.ip = ip;
-        il = new ImageLoader(this.ip);
+        imgLoader = new ImageLoader(this.ip);
     }
     
     void setCameraParameter(float mw, float mh, float dw, float dh) {
@@ -166,13 +194,13 @@ class Camera {
         for(int i = 0; i < points.size(); i++) {
             Vector2 pp = points.get(i);
             p = new Vector3((pp.x - cx) / proj, (pp.y - cy) / proj, 1);
-            //좌표계 변환
-            /*
+            /* 좌표계 변환
+             *
             p = p.mul(1/p.abs()); // norm
             Quaternion q = new Quaternion(0, p);
             q = q.roll(Quaternion.getRollFromEuler(-Math.PI/2 + tilt, 0, pan));
             p = q.toVector();
-            */
+             */
             p.roll(-(float)Math.PI/2 + tilt, 0, pan);
             traceLine.add(p);
         }
@@ -182,14 +210,12 @@ class Camera {
      int findPoint() {
         points = new ArrayList<Vector2>(); // reset list
         try {
-			ImageLoader loader = new ImageLoader(ip);
+			Vector2[] data = imgLoader.getData();
 			
-			Vector2[] data = loader.getData();
 			for(Vector2 d : data)
 				points.add(d);
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 0;
 		}

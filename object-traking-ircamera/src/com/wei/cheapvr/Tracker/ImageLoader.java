@@ -6,28 +6,31 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-
+import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 
 public class ImageLoader {
-	String esp_ip;
+	String esp_ip, videoAddress;
 	VideoCapture cap;
 	int w, h;
 	public ImageLoader(String ip){
 		esp_ip = ip;
 		
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		String videoAddress = "http://" + esp_ip +"/capture";
+		videoAddress = "http://" + esp_ip +"/capture";
 		cap = new VideoCapture(videoAddress);
 		openVideoFromWeb(cap, videoAddress);
 	}
@@ -38,21 +41,22 @@ public class ImageLoader {
 			show("Error opening video stream");
 			return -1;
 		}
-		show("Opened camera successfully");
+		show("Opened camera successfully(ip: " + esp_ip + ")");
 		return 0;
 	}
 	
-	public BufferedImage capture() throws Exception{
+	public Mat capture() throws Exception{
 		Mat image = new Mat();
-		
+		if(cap.open(videoAddress))
 		if(!cap.read(image)) {
 			show("No frame");
 			return null;
 		}
 		else {
-			return Mat2BufferedImage(image);
+			return image;
 			//displayImage(Mat2BufferedImage(image));
 		}
+		return null;
 	}
 	
 	/*
@@ -70,30 +74,49 @@ public class ImageLoader {
 	*/
 	
 	public Vector2[] getData() throws Exception {
-		BufferedImage image = capture();
-		Vector2[] data;
+		Mat image = new Mat(), grayImage = new Mat(), circles = new Mat();
+		image = capture();
 		
-		int c = 0;
-		Color p;
-		for(int x = 0; x < w; x++)
-		for(int y = 0; y < h; y++) {
-			p = new Color(image.getRGB(x, y));
-			if(p.getRed() > 200 && p.getGreen() < 128 && p.getBlue() < 128)
-				c++;
-			
+		Vector2[] points;
+		if(image == null) { return new Vector2[0]; }
+		
+		//bainarization
+		Imgproc.cvtColor(image, grayImage, Imgproc.COLOR_RGB2GRAY);
+		Imgproc.adaptiveThreshold(grayImage, image, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 4);
+		//Imgproc.threshold(grayImage, image, 20, 255, Imgproc.THRESH_BINARY);
+		
+		Imgproc.HoughCircles(image, circles, Imgproc.HOUGH_GRADIENT, 
+  2,   // 누적기 해상도(영상크기/2)
+  10,  // 두 원 간의 최소 거리
+  200, // 캐니 최대 경계값
+  35, // 투표 최소 개수
+  2, 20); // 최소와 최대 반지름
+		show("Circles count: " + circles.size());
+		show("Circles: " + circles.dump());
+		points = new Vector2[circles.cols()];
+		
+		
+		// 원 그리기
+		double x, y;
+		int r;
+		for(int i = 0; i < circles.cols(); i++) {
+			double[] data = circles.get(0, i);
+			show("data:" + data.length);
+			/*for(int j = 0; j < data.length; j++)*/ {
+				x = data[0];
+				y = data[1];
+				r = (int)Math.round(data[2]);
+			}
+			Point center = new Point(x, y);
+			Imgproc.circle(image, 
+			     center, // 원 중심
+			     r,  // 원 반지름
+			     new Scalar(255), // 컬러 
+			     1);    // 두께
+			points[i] = new Vector2((float)x, (float)y);
 		}
-		System.out.println("count: " + c);
-		data = new Vector2[c];
-		
-		c = 0;
-		for(int x = 0; x < w; x++)
-		for(int y = 0; y < h; y++) {
-			p = new Color(image.getRGB(x, y));
-			if(p.getRed() > 200 && p.getGreen() < 128 && p.getBlue() < 128)
-				data[c++] = new Vector2(x, y);
-		}
-		
-		return data;
+		displayImage(Mat2BufferedImage(image));
+		return points;
 	}
 	
 	
