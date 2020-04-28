@@ -26,6 +26,10 @@ public class ImageLoader {
 	String esp_ip, videoAddress;
 	VideoCapture cap;
 	int w, h;
+
+	JFrame frame;
+	JLabel lbl;
+
 	public ImageLoader(String ip){
 		esp_ip = ip;
 		
@@ -36,7 +40,8 @@ public class ImageLoader {
 	}
 	
 	int openVideoFromWeb(VideoCapture cap, String address) {
-		
+		String var = "framesize", val = "5";
+		cap.open("http://" + esp_ip +"/control?var=" + var + "&val=" + val);
 		if(!cap.open(address)) {
 			show("Error opening video stream");
 			return -1;
@@ -82,10 +87,11 @@ public class ImageLoader {
 		
 		//bainarization
 		Imgproc.cvtColor(image, grayImage, Imgproc.COLOR_RGB2GRAY);
-		Imgproc.adaptiveThreshold(grayImage, image, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 4);
+		//Imgproc.adaptiveThreshold(grayImage, image, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 4);
 		//Imgproc.threshold(grayImage, image, 20, 255, Imgproc.THRESH_BINARY);
 		
-		Imgproc.HoughCircles(image, circles, Imgproc.HOUGH_GRADIENT, 
+		/*
+		Imgproc.HoughCircles(image, circles, Imgproc.HOUGH_GRADIENT,
   2,   // 누적기 해상도(영상크기/2)
   10,  // 두 원 간의 최소 거리
   200, // 캐니 최대 경계값
@@ -93,6 +99,7 @@ public class ImageLoader {
   2, 20); // 최소와 최대 반지름
 		show("Circles count: " + circles.size());
 		show("Circles: " + circles.dump());
+		 */
 		points = new Vector2[circles.cols()];
 		
 		
@@ -120,16 +127,18 @@ public class ImageLoader {
 	}
 	
 	
-	public void displayImage(Image img2) {   
+	public void displayImage(Image img2) {
+		if (frame == null) {
+			frame = new JFrame();
+			frame.setLayout(new FlowLayout());
+			frame.setSize(img2.getWidth(null) + 50, img2.getHeight(null) + 50);
+			lbl = new JLabel();
+			frame.add(lbl);
+			frame.setVisible(true);
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
 		ImageIcon icon = new ImageIcon(img2);
-	    JFrame frame=new JFrame();
-	    frame.setLayout(new FlowLayout());        
-	    frame.setSize(img2.getWidth(null)+50, img2.getHeight(null)+50);     
-	    JLabel lbl=new JLabel();
 	    lbl.setIcon(icon);
-	    frame.add(lbl);
-	    frame.setVisible(true);
-	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	static BufferedImage Mat2BufferedImage(Mat matrix)throws Exception {        

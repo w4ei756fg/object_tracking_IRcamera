@@ -92,13 +92,19 @@ public class Main {
     	CameraTracker ct = new CameraTracker();
 
     	ct.addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, "172.30.1.55");
-    	ct.addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, "172.30.1.56");
+    	//ct.addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, "172.30.1.56");
         //ct.addCamera(61.2,1.19,4.15, 0, 0, 0);
         //ct.addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
         
-    	for(int i = 0; i < 100; i++) {
+    	for(int i = 0; i < 1000; i++) {
             ct.findPoint();
-    	}
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            show(i + "번==================");
+        }
 	}
 
 	public static void testImageLoader(String filename) {
