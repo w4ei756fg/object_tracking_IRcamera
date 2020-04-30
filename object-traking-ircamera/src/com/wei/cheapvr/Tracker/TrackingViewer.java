@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class TrackingViewer extends JFrame {
     CameraTracker ct;
-    TracingViewPanel tracingViewPanel;
+    TrackingViewPanel trackingViewPanel;
     ArrayList<CameraPanel> cameraPanels = new ArrayList<>();
 
     public TrackingViewer(CameraTracker ct) {
@@ -17,11 +17,11 @@ public class TrackingViewer extends JFrame {
 
     private void initUI() {
 
-        tracingViewPanel = new TracingViewPanel();
-        tracingViewPanel.setCameraTracker(ct);
-        tracingViewPanel.setSize(720, 720);
-        tracingViewPanel.setLocation(560, 0);
-        add(tracingViewPanel);
+        trackingViewPanel = new TrackingViewPanel();
+        trackingViewPanel.setCameraTracker(ct);
+        trackingViewPanel.setSize(720, 720);
+        trackingViewPanel.setLocation(560, 0);
+        add(trackingViewPanel);
 
         setSize(1280, 720);
         setTitle("Tracking Viewer");
@@ -40,8 +40,7 @@ public class TrackingViewer extends JFrame {
     }
 
     public void updateTrackingPanel() {
-        tracingViewPanel.revalidate();
-        tracingViewPanel.repaint();
+        trackingViewPanel.update();
     }
 
     public void updateCameraPanel(int id) {
@@ -56,7 +55,7 @@ public class TrackingViewer extends JFrame {
 /**
  * 트래킹 모니터링 패널
  */
-class TracingViewPanel extends JPanel {
+class TrackingViewPanel extends JPanel {
     CameraTracker ct;
     Graphics2D g2d;
     int width, height;
@@ -160,6 +159,11 @@ class TracingViewPanel extends JPanel {
 
         super.paintComponent(g);
         doDrawing(g);
+    }
+
+    public void update() {
+        revalidate();
+        repaint();
     }
 
     public static void show(String str) {
