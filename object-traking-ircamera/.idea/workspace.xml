@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99301857-bdd0-4e39-b50b-836add671088" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/CameraTracker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/CameraTracker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/ImageLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/ImageLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/TrackingViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/TrackingViewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Vector2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Vector2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Vector3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Vector3.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

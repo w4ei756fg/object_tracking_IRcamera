@@ -1,6 +1,7 @@
 package com.wei.cheapvr;
 
 import com.wei.cheapvr.Tracker.*;
+import static com.wei.cheapvr.Utils.*;
 
 public class Main {
     final static float ERROR_DEADZONE = 5;
@@ -113,7 +114,6 @@ public class Main {
 			show("-----");
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -130,5 +130,4 @@ public class Main {
         track.updateTracking();
         track.showTrackingInfo();
     }
-	public static void show(String str) { System.out.println(str); }
 }

@@ -1,27 +1,27 @@
 package com.wei.cheapvr.Tracker;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.opencv.core.*;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 import org.opencv.videoio.VideoCapture;
 
+import static com.wei.cheapvr.Utils.*;
 
+/**
+ * 이미지나 웹캠으로부터 Point를 추적하는 역할을 합니다.
+ *
+ * @author wei756
+ */
 public class ImageLoader {
     String esp_ip, videoAddress;
     VideoCapture cap;
@@ -52,6 +52,12 @@ public class ImageLoader {
         return 0;
     }
 
+    /**
+     * 웹 스트리밍으로부터 이미지를 가져온 뒤 Mat로 반환합니다.
+     * @return
+     * @throws Exception
+     * @see #getData()
+     */
     public Mat capture() throws Exception {
         Mat image = new Mat();
         if (cap.open(videoAddress))
@@ -97,7 +103,7 @@ public class ImageLoader {
             return new Vector2[0];
         }
 
-        //bainarization
+        // Binarization
         Imgproc.cvtColor(rawImage, grayImage, Imgproc.COLOR_RGB2GRAY);
         //Imgproc.adaptiveThreshold(grayImage, image, 255, Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 51, 4);
         Imgproc.threshold(grayImage, image, 58, 255, Imgproc.THRESH_BINARY);
@@ -118,32 +124,17 @@ public class ImageLoader {
             r = 10;
 
             Point center = new Point(x, y);
-            Imgproc.circle(rawImage,
-                    center, // 원 중심
-                    r,  // 원 반지름
-                    new Scalar(255), // 컬러
-                    1);    // 두께
+            Imgproc.circle(rawImage, center, r, new Scalar(255), 1);
             points[i] = new Vector2((float) x, (float) y);
         }
 
         return points;
     }
 
-
-    public void displayImage(Image img2) {
-        if (frame == null) {
-            frame = new JFrame();
-            frame.setLayout(new FlowLayout());
-            frame.setSize(img2.getWidth(null) + 50, img2.getHeight(null) + 50);
-            lbl = new JLabel();
-            frame.add(lbl);
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        }
-        ImageIcon icon = new ImageIcon(img2);
-        lbl.setIcon(icon);
-    }
-
+    /**
+     * 카메라의 현재 원본 이미지를 반환합니다.
+     * @return
+     */
     Image getRawImage() {
         try {
             return Mat2BufferedImage(rawImage);
@@ -153,6 +144,10 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * 카메라의 현재 그레이스케일 이미지를 반환합니다.
+     * @return
+     */
     Image getGrayImage() {
         try {
             return Mat2BufferedImage(grayImage);
@@ -162,6 +157,10 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * 카메라의 현재 흑백 이미지를 반환합니다.
+     * @return
+     */
     Image getImage() {
         try {
             return Mat2BufferedImage(image);
@@ -171,6 +170,10 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * Mat 타입의 이미지를 Image 로 변환하여 반환합니다
+     * @return
+     */
     static BufferedImage Mat2BufferedImage(Mat matrix) throws Exception {
         MatOfByte mob = new MatOfByte();
         Imgcodecs.imencode(".jpg", matrix, mob);
@@ -178,9 +181,5 @@ public class ImageLoader {
 
         BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ba));
         return bi;
-    }
-
-    public static void show(String str) {
-        System.out.println(str);
     }
 }

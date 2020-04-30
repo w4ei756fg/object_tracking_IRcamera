@@ -3,6 +3,8 @@ package com.wei.cheapvr.Tracker;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.wei.cheapvr.Utils.*;
+
 /**
  * CameraTracker
  * Find tracking points from images that IR cameras captured
@@ -12,7 +14,7 @@ import java.util.Iterator;
  * 정확한 의미 전달을 위해 메소드 주석은 주로 한국어로 작성됨
  * For expressing exactly, this class's javadoc is written in Korean. Sorry for my bad English..
  *
- * @author wei
+ * @author wei756
  * @see Camera
  * @see ImageLoader
  */
@@ -24,7 +26,7 @@ public class CameraTracker {
     private ArrayList<Camera> cam = new ArrayList<Camera>();
 
     /**
-     * 카메라로부터 추적한 point들
+     * 카메라로부터 추적한 Point
      */
     private ArrayList<Vector3> points = new ArrayList<Vector3>();
 
@@ -72,9 +74,11 @@ public class CameraTracker {
 
     static class CameraRunnable implements Runnable {
         Camera camera;
+
         CameraRunnable(Camera camera) {
             this.camera = camera;
         }
+
         @Override
         public void run() {
             camera.updateTraceLine();
@@ -143,19 +147,31 @@ public class CameraTracker {
         showPoints();
     }
 
+    /**
+     * 두 직선 사이의 거리를 반환합니다.
+     *
+     * @param p1
+     * @param v1
+     * @param p2
+     * @param v2
+     * @return
+     */
     float distLineToLine(Vector3 p1, Vector3 v1, Vector3 p2, Vector3 v2) {
-        /**
-         * return (p2 - p1)·(v1×v2) / abs(v1×v2)
-         */
-        return Math.abs(p2.minus(p1).dot(v1.cross(v2))) / v1.cross(v2).abs();
+        return Math.abs(p2.minus(p1).dot(v1.cross(v2))) / v1.cross(v2).abs(); // |(p2 - p1)·(v1×v2)| / abs(v1×v2)
     }
 
+    /**
+     * 추적된 Point를 출력합니다.
+     */
     public void showPoints() {
         for (Vector3 point : points) {
             show(point.toString());
         }
     }
 
+    /**
+     * 추적된 Point를 반환합니다.
+     */
     public Vector3[] getPoints() {
         Vector3[] point = new Vector3[points.size()];
         for (int i = 0; i < point.length; i++)
@@ -164,16 +180,15 @@ public class CameraTracker {
         return point;
     }
 
+    /**
+     * 카메라 오브젝트를 반환합니다.
+     */
     public Camera[] getCameras() {
         Camera[] cam = new Camera[this.cam.size()];
         for (int i = 0; i < cam.length; i++)
             cam[i] = this.cam.get(i);
 
         return cam;
-    }
-
-    private void show(String str) {
-        System.out.println(str);
     }
 }
 

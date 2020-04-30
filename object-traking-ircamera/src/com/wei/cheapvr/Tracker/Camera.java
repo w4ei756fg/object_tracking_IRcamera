@@ -2,6 +2,9 @@ package com.wei.cheapvr.Tracker;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import static com.wei.cheapvr.Utils.*;
 
 public class Camera {
     public static float[] NOTE8_BACK = {4032, 3024, 0.567005f, 0.445538f};
@@ -12,8 +15,8 @@ public class Camera {
     public final int id;
     private ImageLoader imgLoader;
     private float mw, mh, cx, cy, dw, dh; // 시야각 radian dw, dh
-    private ArrayList<Vector2> points = new ArrayList<Vector2>();
-    private ArrayList<Vector3> traceLine = new ArrayList<Vector3>();
+    private ArrayList<Vector2> points = new ArrayList<>();
+    private ArrayList<Vector3> traceLine = new ArrayList<>();
 
     Camera(float x, float y, float z, float pan, float tilt, String ip, int id) {
         this.x = x;
@@ -26,6 +29,14 @@ public class Camera {
         imgLoader = new ImageLoader(this.ip, this.id);
     }
 
+    /**
+     * 카메라 내부 파라미터를 설정합니다.
+     *
+     * @param mw 픽셀 width
+     * @param mh 픽셀 height
+     * @param dw 수평 시야각
+     * @param dh 수직 시야각
+     */
     void setCameraParameter(float mw, float mh, float dw, float dh) {
         this.mw = mw;
         this.mh = mh;
@@ -35,15 +46,20 @@ public class Camera {
         this.dh = dh;
     }
 
+    /**
+     * 카메라 내부 파라미터를 설정합니다.
+     *
+     * @param profile [픽셀 width, 픽셀 height, 수평 시야각, 수직 시야각]
+     */
     void setCameraParameter(float[] profile) {
-        this.mw = profile[0];
-        this.mh = profile[1];
-        cx = this.mw / 2;
-        cy = this.mh / 2;
-        this.dw = profile[2];
-        this.dh = profile[3];
+        setCameraParameter(profile[0], profile[1], profile[2], profile[3]);
     }
 
+    /**
+     * traceLine을 추적합니다.
+     *
+     * @return
+     */
     int updateTraceLine() {
         if (findPoint() == 0) return -2;
         traceLine = new ArrayList<Vector3>(); // reset list
@@ -67,13 +83,18 @@ public class Camera {
         return 0;
     }
 
+    /**
+     * ImageLoader로부터 추적된 Point를 points에 저장합니다.
+     *
+     * @return
+     * @see ImageLoader#getData()
+     */
     int findPoint() {
         points = new ArrayList<Vector2>(); // reset list
         try {
             Vector2[] data = imgLoader.getData();
 
-            for (Vector2 d : data)
-                points.add(d);
+            points.addAll(Arrays.asList(data));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,10 +137,18 @@ public class Camera {
         return points.size();
     }
 
+    /**
+     * 현재 추적된 traceLine를 반환합니다.
+     *
+     * @return
+     */
     ArrayList<Vector3> getTraceLine() {
         return traceLine;
     }
 
+    /**
+     * 카메라 정보를 출력합니다.
+     */
     public void showInfo() {
         show("I:Camera information(Camera)");
         show("Centroid: (" + x + ", " + y + ", " + z + ")");
@@ -139,31 +168,51 @@ public class Camera {
         show("===================================");
     }
 
+    /**
+     * 카메라의 현재 원본 이미지를 반환합니다.
+     * @return
+     */
     public Image getRawImage() {
         return imgLoader.getRawImage();
     }
 
+    /**
+     * 카메라의 현재 그레이스케일 이미지를 반환합니다.
+     * @return
+     */
     public Image getGrayImage() {
         return imgLoader.getGrayImage();
     }
 
+    /**
+     * 카메라의 현재 흑백 이미지를 반환합니다.
+     * @return
+     */
     public Image getImage() {
         return imgLoader.getImage();
     }
 
+    /**
+     * 카메라의 좌표를 반환합니다.
+     * @return
+     */
     Vector3 getPos() {
         return new Vector3(x, y, z);
     }
 
+    /**
+     * 카메라의 틸트 값을 반환합니다.
+     * @return
+     */
     float getTilt() {
         return tilt;
     }
 
+    /**
+     * 카메라의 팬 값을 반환합니다.
+     * @return
+     */
     float getPan() {
         return pan;
-    }
-
-    private void show(String str) {
-        System.out.println(str);
     }
 }

@@ -85,8 +85,6 @@ class TrackingViewPanel extends JPanel {
         for (Vector3 point : points) {
             drawPoint(point.x, point.y, point.z);
         }
-
-        show("Viewer updated");
     }
 
     private void drawCenter() {
@@ -164,10 +162,6 @@ class TrackingViewPanel extends JPanel {
     public void update() {
         revalidate();
         repaint();
-    }
-
-    public static void show(String str) {
-        System.out.println(str);
     }
 }
 
