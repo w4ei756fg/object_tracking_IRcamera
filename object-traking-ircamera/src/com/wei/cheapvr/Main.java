@@ -1,12 +1,6 @@
 package com.wei.cheapvr;
 
-import com.wei.cheapvr.Tracker.CameraTracker;
-import com.wei.cheapvr.Tracker.ImageLoader;
-import com.wei.cheapvr.Tracker.ObjectTracker;
-import com.wei.cheapvr.Tracker.Vector3;
-import com.wei.cheapvr.Tracker.Quaternion;
-import com.wei.cheapvr.Tracker.Structure;
-import com.wei.cheapvr.Tracker.Vector2;
+import com.wei.cheapvr.Tracker.*;
 
 public class Main {
     final static float ERROR_DEADZONE = 5;
@@ -88,28 +82,30 @@ public class Main {
     }
     
     public static void testCameraTracker() {
-		// TODO Auto-generated method stub
     	CameraTracker ct = new CameraTracker();
 
-    	ct.addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, "172.30.1.55");
-    	//ct.addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, "172.30.1.56");
+        ct.addCamera(13.6f, 0f, 0f, 0.03f, 0f, Camera.OV2640_CIF, "172.30.1.91");
+        ct.addCamera(0f, 0f, 0f, 0f, 0f, Camera.OV2640_CIF, "172.30.1.92");
+        //ct.addCamera(0f, 0f, 14f, -0.85582f, -0.680354f, "172.30.1.91");
+        //ct.addCamera(29.7f, 0f, 14f, 0.950546f, -0.683191f, "172.30.1.92");
         //ct.addCamera(61.2,1.19,4.15, 0, 0, 0);
         //ct.addCamera(96.3 - 29.26,27.25,47.0, 0, -Math.PI/2, 1);
+
+        TrackingViewer viewer = new TrackingViewer(ct);
+        viewer.setVisible(true);
         
     	for(int i = 0; i < 1000; i++) {
             ct.findPoint();
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            viewer.updateTrackingPanel();
+            viewer.updateCameraPanel(0);
+            viewer.updateCameraPanel(1);
             show(i + "번==================");
         }
 	}
 
 	public static void testImageLoader(String filename) {
     	try {
-			ImageLoader loader = new ImageLoader(filename);
+			ImageLoader loader = new ImageLoader(filename, 0);
 			
 			Vector2[] data = loader.getData();
 			for(Vector2 d : data)
