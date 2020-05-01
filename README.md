@@ -1,16 +1,20 @@
 # IR Object Tracking
 
-IR Object Tracking은 물체의 위치와 방향을 추적하는 기능을 합니다.
+IR Object Tracking은 '흙수저 VR 프로젝트'의 일부로 사물의 위치와 방향을 추적합니다.
 
-IR Object Tracking은 '흙수저 VR 프로젝트'의 일부입니다.
+두 개 이상의 적외선 카메라(트래커)를 사용해 사물의 표면에 부착된 IR LED를 감지하고, 이를 통해 사물을 추적합니다.
 
-IR Object Tracking detects object and gives you its position and direction.
+IR Object Tracking tracks objects and gives you its position and direction.
 
 It is a part of my 'Cheap VR under $200' project.
 
+2 or more IR cameras detect IR LEDs on the object to track it.
+
+## Screenshots
+
 ![Screenshot](./pictures/1.png)
 
-## Require
+## Requires
 - OpenCV v3.4.6
 
 ## Default tracker setting
