@@ -19,11 +19,11 @@ public class TrackingViewer extends JFrame {
 
         trackingViewPanel = new TrackingViewPanel();
         trackingViewPanel.setCameraTracker(ct);
-        trackingViewPanel.setSize(720, 720);
+        trackingViewPanel.setSize(720, 854);
         trackingViewPanel.setLocation(560, 0);
         add(trackingViewPanel);
 
-        setSize(1280, 720);
+        setSize(1280, 854);
         setTitle("Tracking Viewer");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

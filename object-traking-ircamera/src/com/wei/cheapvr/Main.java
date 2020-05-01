@@ -95,7 +95,7 @@ public class Main {
         TrackingViewer viewer = new TrackingViewer(ct);
         viewer.setVisible(true);
         
-    	for(int i = 0; i < 1000; i++) {
+    	for(int i = 0; i > -1; i++) {
             ct.findPoint();
             viewer.updateTrackingPanel();
             viewer.updateCameraPanel(0);

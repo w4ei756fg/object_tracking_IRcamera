@@ -23,9 +23,9 @@ public class Structure {
     public Structure(Vector3[] data) {
         for(Vector3 p : data)
             points.add(p);
-        for(int i = 0; i < points.size(); i++) {
-            points.get(i).giveParent(this);
-            points.get(i).sortConnectionList();
+        for (Vector3 point : points) {
+            point.giveParent(this);
+            point.sortConnectionList();
         }
     }
     

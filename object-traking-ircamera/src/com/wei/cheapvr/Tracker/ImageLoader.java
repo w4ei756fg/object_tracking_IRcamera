@@ -94,6 +94,9 @@ public class ImageLoader {
     public Vector2[] getData() throws Exception {
         Mat blobs = new Mat();
         List<MatOfPoint> listBlobs = new ArrayList<MatOfPoint>();
+        rawImage = null;
+        grayImage = null;
+        image = null;
         rawImage = capture();
         grayImage = new Mat();
         image = new Mat();
