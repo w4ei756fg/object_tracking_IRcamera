@@ -13,6 +13,11 @@ It is a part of my 'Cheap VR under $200' project.
 ## Require
 - OpenCV v3.4.6
 
+## Default tracker setting
+
+- 0: \[13.6, 0, 0\], 172.30.1.91
+- 1: \[0,    0, 0\], 172.30.1.92
+
 ## Parts
 - ESP32-CAM (OV2640)
 - IR Filter
