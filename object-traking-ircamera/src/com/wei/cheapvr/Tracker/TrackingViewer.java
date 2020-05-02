@@ -2,6 +2,8 @@ package com.wei.cheapvr.Tracker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class TrackingViewer extends JFrame {
@@ -184,6 +186,21 @@ class CameraPanel extends JPanel {
 
     public void update() {
         Image img = camera.getRawImage();
+        if (img != null) {
+            ImageIcon icon = new ImageIcon(img);
+
+            if (lbl == null) {
+                lbl = new JLabel();
+                lbl.setSize(400, 296);
+                lbl.setLocation(0, 0);
+                add(lbl);
+            }
+
+            lbl.setIcon(icon);
+        }
+    }
+
+    public void update(Image img) {
         if (img != null) {
             ImageIcon icon = new ImageIcon(img);
 

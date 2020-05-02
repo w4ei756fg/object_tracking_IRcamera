@@ -1,6 +1,8 @@
 package com.wei.cheapvr.Tracker;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -27,6 +29,12 @@ public class Camera {
         this.ip = ip;
         this.id = id;
         imgLoader = new ImageLoader(this.ip, this.id);
+        try {
+            MjpegRunner mjpegRunner = new MjpegRunner(imgLoader, new URL("http://" + ip + ":81/stream"));
+            new Thread(mjpegRunner).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -198,6 +206,14 @@ public class Camera {
      */
     Vector3 getPos() {
         return new Vector3(x, y, z);
+    }
+
+    /**
+     * 카메라의 ip주소를 반환합니다.
+     * @return
+     */
+    String getIP() {
+        return ip;
     }
 
     /**

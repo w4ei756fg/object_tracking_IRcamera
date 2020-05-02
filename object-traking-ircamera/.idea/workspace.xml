@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99301857-bdd0-4e39-b50b-836add671088" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/MjpegRunner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/ImageLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/ImageLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Structure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/Structure.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/TrackingViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/wei/cheapvr/Tracker/TrackingViewer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,13 +32,31 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\mk\Documents\GitHub\object_tracking_IRcamera\object-traking-ircamera\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.andrealaforgia.mjpegclient.App" />
+      <module name="object-traking-ircamera" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.andrealaforgia.mjpegclient.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.wei.cheapvr.Main" />
       <module name="object-traking-ircamera" />
@@ -55,6 +73,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
   </component>
@@ -104,22 +123,38 @@
       <screen x="0" y="40" width="1920" height="1040" />
     </state>
     <state x="740" y="313" key="FileChooserDialogImpl/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588097097095" />
-    <state width="1877" height="120" key="GridCell.Tab.0.bottom" timestamp="1588339552952">
+    <state width="1877" height="353" key="GridCell.Tab.0.bottom" timestamp="1588444707972">
       <screen x="0" y="40" width="1920" height="1040" />
     </state>
-    <state width="1877" height="120" key="GridCell.Tab.0.bottom/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588339552952" />
-    <state width="1877" height="120" key="GridCell.Tab.0.center" timestamp="1588339552951">
+    <state width="1877" height="353" key="GridCell.Tab.0.bottom/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588444707972" />
+    <state width="1877" height="353" key="GridCell.Tab.0.center" timestamp="1588444707972">
       <screen x="0" y="40" width="1920" height="1040" />
     </state>
-    <state width="1877" height="120" key="GridCell.Tab.0.center/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588339552951" />
-    <state width="1877" height="120" key="GridCell.Tab.0.left" timestamp="1588339552951">
+    <state width="1877" height="353" key="GridCell.Tab.0.center/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588444707972" />
+    <state width="1877" height="353" key="GridCell.Tab.0.left" timestamp="1588444707972">
       <screen x="0" y="40" width="1920" height="1040" />
     </state>
-    <state width="1877" height="120" key="GridCell.Tab.0.left/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588339552951" />
-    <state width="1877" height="120" key="GridCell.Tab.0.right" timestamp="1588339552952">
+    <state width="1877" height="353" key="GridCell.Tab.0.left/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588444707972" />
+    <state width="1877" height="353" key="GridCell.Tab.0.right" timestamp="1588444707972">
       <screen x="0" y="40" width="1920" height="1040" />
     </state>
-    <state width="1877" height="120" key="GridCell.Tab.0.right/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588339552952" />
+    <state width="1877" height="353" key="GridCell.Tab.0.right/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588444707972" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1588434440206">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588434440206" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1588434440206">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.center/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588434440206" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1588434440206">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.left/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588434440206" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1588434440206">
+      <screen x="0" y="40" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="348" key="GridCell.Tab.1.right/-2048.-34.2048.1112/0.40.1920.1040/1920.0.1920.1080@0.40.1920.1040" timestamp="1588434440206" />
     <state x="440" y="133" key="SettingsEditor" timestamp="1588097098629">
       <screen x="0" y="40" width="1920" height="1040" />
     </state>

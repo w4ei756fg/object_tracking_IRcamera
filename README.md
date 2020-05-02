@@ -30,3 +30,4 @@ It is a part of my 'Cheap VR under $200' project.
 ## Credit
 - IR Object Tracking: Apache License 2.0 Copyright 2019 - 2020, Wei756([@wei756](http://github.com/wei756)) (kjhoon1122@naver.com)
 - [Httpd](./esp32-cam/CameraWebServer/app_httpd.cpp): Apache License 2.0 Copyright 2015 - 2016, Espressif Systems (Shanghai) PTE LTD
+- [MJpegRunner](http://thistleshrub.net/www/index.php?controller=posts&action=show&id=2012-05-13DisplayingStreamedMJPEGinJava.txt): Copyright 2012, shrub34

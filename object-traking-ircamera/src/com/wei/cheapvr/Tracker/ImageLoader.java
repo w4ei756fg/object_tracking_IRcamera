@@ -2,6 +2,7 @@ package com.wei.cheapvr.Tracker;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class ImageLoader {
     JFrame frame;
     JLabel lbl;
 
-    Mat rawImage, grayImage, image;
+    Mat rawImage;
+    Mat grayImage, image;
 
     public ImageLoader(String ip, int id) {
         esp_ip = ip;
@@ -69,6 +71,10 @@ public class ImageLoader {
             }
         return null;
     }
+
+    public void setImage(BufferedImage image) {
+        rawImage = ImageLoader.bufferedImage2Mat(image);
+    }
 	
 	/*
 	public ImageLoader(String filename) throws Exception{
@@ -94,10 +100,7 @@ public class ImageLoader {
     public Vector2[] getData() throws Exception {
         Mat blobs = new Mat();
         List<MatOfPoint> listBlobs = new ArrayList<MatOfPoint>();
-        rawImage = null;
-        grayImage = null;
-        image = null;
-        rawImage = capture();
+        //rawImage = capture();
         grayImage = new Mat();
         image = new Mat();
 
@@ -177,12 +180,23 @@ public class ImageLoader {
      * Mat 타입의 이미지를 Image 로 변환하여 반환합니다
      * @return
      */
-    static BufferedImage Mat2BufferedImage(Mat matrix) throws Exception {
+    public static BufferedImage Mat2BufferedImage(Mat matrix) throws Exception {
         MatOfByte mob = new MatOfByte();
         Imgcodecs.imencode(".jpg", matrix, mob);
         byte ba[] = mob.toArray();
 
         BufferedImage bi = ImageIO.read(new ByteArrayInputStream(ba));
         return bi;
+    }
+
+    /**
+     * Image를 Mat 타입으로 변환하여 반환합니다
+     * @return
+     */
+    public static Mat bufferedImage2Mat(BufferedImage bi) {
+        Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
+        byte[] data = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        mat.put(0, 0, data);
+        return mat;
     }
 }
